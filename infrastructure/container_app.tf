@@ -32,7 +32,7 @@ template {
     min_replicas = 0
     container {
       name   = "api-demo"
-      image  = "docker.io/kenfabguzram/restful-api:1.1"
+      image  = "docker.io/kenfabguzram/restful-api:latest"
       cpu    = "0.25"
       memory = "0.5Gi"
       env {
@@ -41,7 +41,7 @@ template {
       }
       env {
         name  = "SQLAZURECONNSTR_WWIF"
-        value = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=project1bdii-sqlserver.database.windows.net;DATABASE=db01;UID=PythonWebApp;PWD=a987REALLY#$%TRONGpa44w0rd"
+        value = "DRIVER={ODBC Driver 18 for SQL Server};SERVER=tcp:project1bdii-sqlserver.database.windows.net;DATABASE=db01;UID=el-adm1n;PWD=dT-Dog01@-bla"
       }
 #      liveness_probe {
 #        port      = 5000
