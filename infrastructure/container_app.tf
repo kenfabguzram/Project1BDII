@@ -32,16 +32,16 @@ template {
     min_replicas = 0
     container {
       name   = "api-demo"
-      image  = "docker.io/nereo08/api-demo:latest"
+      image  = "docker.io/kenfabguzram/restful-api:latest"
       cpu    = "0.25"
       memory = "0.5Gi"
       env {
-        name  = "ENV1"
-        value = "VAL1"
+        name  = "APPINSIGHTS_KEY"
+        value = "6865b59c-1168-4526-a97a-5d0f01ee4bf6"
       }
       env {
-        name  = "ENV2"
-        value = "VAL2"
+        name  = "SQLAZURECONNSTR_WWIF"
+        value = "DRIVER={ODBC Driver 18 for SQL Server};SERVER=tcp:project1bdii-sqlserver.database.windows.net;DATABASE=db01;UID=el-adm1n;PWD=dT-Dog01@-bla"
       }
 #      liveness_probe {
 #        port      = 5000
