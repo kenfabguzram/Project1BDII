@@ -43,10 +43,6 @@ template {
         name  = "SQLAZURECONNSTR_WWIF"
         value = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=project1bdii-sqlserver.database.windows.net;DATABASE=db01;UID=PythonWebApp;PWD=a987REALLY#$%TRONGpa44w0rd"
       }
-      env {
-        name  = "SQLAZURECONNSTR_WWIF"
-        value = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=project1bdii-sqlserver.database.windows.net;DATABASE=db01;UID=PythonWebApp;PWD=a987REALLY#$%TRONGpa44w0rd"
-      }
 #      liveness_probe {
 #        port      = 5000
 #        timeout   = 5
