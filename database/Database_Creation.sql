@@ -33,201 +33,201 @@ DROP TABLE IF EXISTS EstadosPeriodo;
 COMMIT TRANSACTION;
 
 CREATE TABLE EvaluacionesComentarios (
-    Id int PRIMARY KEY,
-    IdEvaluacion int,
-    Comentario varchar(255)
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdEvaluacion int NOT NULL,
+    Comentario varchar(255) NOT NULL
 );
 
 CREATE TABLE Evaluaciones (
-    Id int PRIMARY KEY,
-    IdActividad int,
-    Comentario varchar(255),
-    Nota float
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdActividad int NOT NULL,
+    Comentario varchar(255) NOT NULL,
+    Nota float NOT NULL
 );
 
 CREATE TABLE EvaluacionesArchivos (
-    Id int PRIMARY KEY,
-    IdEvaluacion int,
-    IdArchivo int
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdEvaluacion int NOT NULL,
+    IdArchivo int NOT NULL
 );
 
 CREATE TABLE Actividades (
-    Id int PRIMARY KEY,
-    IdRubro int,
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdRubro int NOT NULL,
     FechaEntrega date,
     Porcentaje float
 );
 
 CREATE TABLE PeriodosMatricula (
-    Id int PRIMARY KEY,
-    IdPeriodoLectivo int,
-    FechaInicio datetime,
-    FechaFinal datetime
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdPeriodoLectivo int NOT NULL,
+    FechaInicio datetime NOT NULL,
+    FechaFinal datetime NOT NULL
 );
 
 CREATE TABLE Rubros (
-    Id int PRIMARY KEY,
-    IdGrupo int,
-    Nombre varchar(25),
-    Porcentaje float
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdGrupo int NOT NULL,
+    Nombre varchar(25) NOT NULL,
+    Porcentaje float NOT NULL
 );
 
 CREATE TABLE PeriodosLectivos (
-    Id int PRIMARY KEY,
-    IdTipo int,
-    IdEstadoPeriodo int,
-    Inicio date,
-    Final date,
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdTipo int NOT NULL,
+    IdEstadoPeriodo int NOT NULL,
+    Inicio date NOT NULL,
+    Final date NOT NULL,
     NombreAmigable varchar(50)
 );
 
 CREATE TABLE EstadosPeriodo (
-    Id int PRIMARY KEY,
-    Nombre varchar(10)
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    Nombre varchar(10) NOT NULL
 );
 
 CREATE TABLE Tipos (
-    Id int PRIMARY KEY,
-    Nombre varchar(13)
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    Nombre varchar(13) NOT NULL
 );
 
 CREATE TABLE TipoArchivo (
-    Id int PRIMARY KEY,
-    Nombre varchar(15)
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    Nombre varchar(15) NOT NULL
 );
 
 CREATE TABLE Archivos (
-    Id int PRIMARY KEY,
-    IdUsuario int,
-    IdTipoArchivo int,
-    IdPeriodo int,
-    IdCurso int,
-    FechaCreacion date,
-    FechaUltimaModificacion date,
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdUsuario int NOT NULL,
+    IdTipoArchivo int NOT NULL,
+    IdPeriodo int NOT NULL,
+    IdCurso int NOT NULL,
+    FechaCreacion date NOT NULL,
+    FechaUltimaModificacion date NOT NULL,
     Nombre varchar(25),
     Descripcion varchar(255),
-    Version varchar(8),
-    Latest bit
+    Version varchar(8) NOT NULL,
+    Latest bit NOT NULL
 );
 
 CREATE TABLE EvaluacionCurso (
-    Id int PRIMARY KEY,
-    IdCurso int,
-    Nota float
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdCurso int NOT NULL,
+    Nota float NOT NULL
 );
 
 CREATE TABLE PlanesCursosDependencias (
-    Id int PRIMARY KEY,
-    IdPlanesCursos int,
-    IdDependencia int,
-    IdCurso int
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdPlanesCursos int NOT NULL,
+    IdDependencia int NOT NULL,
+    IdCurso int NOT NULL
 );
 
 CREATE TABLE ArchivosCarreras (
-    Id int PRIMARY KEY,
-    IdCarrera int,
-    IdArchivo int
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdCarrera int NOT NULL,
+    IdArchivo int NOT NULL
 );
 
 CREATE TABLE EstadosPlan (
-    Id int PRIMARY KEY,
-    Nombre varchar(7)
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    Nombre varchar(7) NOT NULL
 );
 
 CREATE TABLE Planes (
-    Id int PRIMARY KEY,
-    IdEstadoPlan int,
-    IdCarrera int,
-    Numero int,
-    FechaCreacion date,
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdEstadoPlan int NOT NULL,
+    IdCarrera int NOT NULL,
+    Numero int NOT NULL,
+    FechaCreacion date NOT NULL,
     FechaActivacion date,
     FechaFinalizacion date
 );
 
 CREATE TABLE PlanesCursosRequisitos (
-    Id int PRIMARY KEY,
-    IdPlanesCursos int,
-    IdRequisito int,
-    IdCurso int
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdPlanesCursos int NOT NULL,
+    IdRequisito int NOT NULL,
+    IdCurso int NOT NULL
 );
 
 CREATE TABLE PlanesCursos (
-    Id int PRIMARY KEY,
-    IdCurso int,
-    IdPlan int
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdCurso int NOT NULL,
+    IdPlan int NOT NULL
 );
 
 CREATE TABLE Carreras (
-    Id int PRIMARY KEY,
-    IdEscuela int,
-    Nombre varchar(25),
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdEscuela int NOT NULL,
+    Nombre varchar(25) NOT NULL,
     Descripcion varchar(255)
 );
 
 CREATE TABLE PeriodosLectivosCursos (
-    Id int PRIMARY KEY,
-    IdPeriodoLectivo int,
-    IdCurso int
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdPeriodoLectivo int NOT NULL,
+    IdCurso int NOT NULL
 );
 
 CREATE TABLE Cursos (
-    Id int PRIMARY KEY,
-    IdTipo int,
-    IdEscuela int,
-    Nombre varchar(25),
-    Creditos int,
-    HorasPorSemana int,
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    IdTipo int NOT NULL,
+    IdEscuela int NOT NULL,
+    Nombre varchar(25) NOT NULL,
+    Creditos int NOT NULL,
+    HorasPorSemana int NOT NULL,
     Descripcion varchar(255)
 );
 
 CREATE TABLE Escuelas (
-    Id int PRIMARY KEY,
-    Nombre varchar(25)
+    Id int PRIMARY KEY IDENTITY (1, 1),
+    Nombre varchar(25) NOT NULL
 );
 
 CREATE TABLE Profesores (
     Id int PRIMARY KEY,
-    IdEscuela int
+    IdEscuela int NOT NULL
 );
 
 CREATE TABLE AsistentesProfesores (
     Id int PRIMARY KEY,
-    IdProfesor int,
-    IdEstudiante int
+    IdProfesor int NOT NULL,
+    IdEstudiante int NOT NULL
 );
 
 CREATE TABLE Estudiantes (
-    Id INT PRIMARY KEY IDENTITY(1,1),
-    Carne VARCHAR(10),
-    Contrasena VARCHAR(25)
+    Id INT PRIMARY KEY,
+    Carne VARCHAR(10) NOT NULL,
+    Contrasena VARCHAR(25) NOT NULL
 );
 
 CREATE TABLE Grupos (
     Id INT PRIMARY KEY IDENTITY(1,1),
-    IdPeriodo INT,
-    IdCurso INT,
-    IdProfesor INT,
-    MaxEstudiantes INT
+    IdPeriodo INT NOT NULL,
+    IdCurso INT NOT NULL,
+    IdProfesor INT NOT NULL,
+    MaxEstudiantes INT NOT NULL
 );
 
 CREATE TABLE GruposHorarios (
     Id INT PRIMARY KEY IDENTITY(1,1),
-    IdGrupo INT,
-    IdHorario INT
+    IdGrupo INT NOT NULL,
+    IdHorario INT NOT NULL
 );
 
 CREATE TABLE Horarios (
     Id INT PRIMARY KEY IDENTITY(1,1),
-    Dia CHAR(1),
-    Hora TIME,
-    Horas INT
+    Dia CHAR(1) NOT NULL,
+    Hora TIME NOT NULL,
+    Horas INT NOT NULL
 );
 
 CREATE TABLE ActividadesEstudiantesArchivos (
     Id INT PRIMARY KEY IDENTITY(1,1),
-    IdActividad INT,
-    IdEstudiante INT,
-    IdArchivo INT
+    IdActividad INT NOT NULL,
+    IdEstudiante INT NOT NULL,
+    IdArchivo INT NOT NULL
 );
 -- EvaluacionesComentarios
 ALTER TABLE EvaluacionesComentarios
