@@ -3,7 +3,7 @@ import os
 import json
 import pyodbc
 import socket
-from flask import Flask
+from flask import Flask, flash, request, redirect, url_for, send_from_directory
 from flask_restful import reqparse, abort, Api, Resource
 from threading import Lock
 from tenacity import *
@@ -11,6 +11,18 @@ from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace.samplers import ProbabilitySampler
 import logging
+from werkzeug.utils import secure_filename
+import uuid
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+
+
+#Setup the blob service client
+default_credential = DefaultAzureCredential()
+if 'ACCOUNT_URL' in os.environ:
+    blob_service_client = BlobServiceClient(os.environ['ACCOUNT_URL'], credential=default_credential)
+
+
 
 # Initialize Flask
 app = Flask(__name__)
@@ -27,7 +39,8 @@ if 'APPINSIGHTS_KEY' in os.environ:
 api = Api(app)
 parser = reqparse.RequestParser()
 parser.add_argument('customer')
-
+parser.add_argument('Cursos')
+parser.add_argument('archivo')
 # Implement singleton to avoid global objects
 class ConnectionManager(object):    
     __instance = None
@@ -123,7 +136,26 @@ class Customers(Queryable):
     def get(self):     
         result = self.executeQueryJson("get")   
         return result, 200
-    
+class Archivo(Queryable):
+    def post(self):     
+        if request.method == 'POST':
+            if 'file' not in request.files:
+                flash('No file part')
+                return "<p>Upload File!</p>"
+        file = request.files['file']
+        if file.filename == '':
+            return  "<p>Upload No name!</p>"
+        filename = secure_filename(file.filename)
+        blob_client = blob_service_client.get_blob_client(container='documents', blob=filename)
+        blob_client.upload_blob(file)
+        return   "<p>Upload!</p>"   
+class Cursos(Queryable):
+    def get(self):
+        return [{"Curso": "Bases de datos", "Escuela": "Computación", "Grupo": 1, "Hora de inicio": "8:00", "Hora final": "9:30", "Profesor": "Juan", "Cupo": 25, "Periodo": "Semestre", "Estado": "Activo" }, { "Curso": "Programación Orientada a Objetos", "Escuela": "Ingeniería en Sistemas", "Grupo": 2, "Hora de inicio": "10:00", "Hora final": "11:30", "Profesor": "María", "Cupo": 30, "Periodo": "Cuatrimestre", "Estado": "Activo" }, { "Curso": "Análisis de Algoritmos", "Escuela": "Ciencias de la Computación", "Grupo": 3, "Hora de inicio": "12:00", "Hora final": "13:30", "Profesor": "Carlos", "Cupo": 20, "Periodo": "Trimestre", "Estado": "Activo" } ]
+        #result = self.executeQueryJson("get")   
+        #return result, 200
 # Create API routes
 api.add_resource(Customer, '/customer', '/customer/<customer_id>')
 api.add_resource(Customers, '/customers')
+api.add_resource(Archivo, '/upload')
+api.add_resource(Cursos, '/Cursos')

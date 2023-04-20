@@ -5,3 +5,5 @@ opencensus-ext-azure
 opencensus-ext-flask
 tenacity
 python-dotenv
+azure-storage-blob
+azure-identity

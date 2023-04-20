@@ -43,6 +43,15 @@ template {
         name  = "SQLAZURECONNSTR_WWIF"
         value = "DRIVER={ODBC Driver 18 for SQL Server};SERVER=tcp:project1bdii-sqlserver.database.windows.net;DATABASE=db01;UID=el-adm1n;PWD=dT-Dog01@-bla"
       }
+      env {
+        name  = "AZURE_CLIENT_ID"
+        value = "${azurerm_user_assigned_identity.main.client_id}"
+      }
+      env {
+        name  = "ACCOUNT_URL"
+        value = "https://filesmanagerproject1bdii.blob.core.windows.net"
+      }
+
 #      liveness_probe {
 #        port      = 5000
 #        timeout   = 5
@@ -79,4 +88,35 @@ resource "azurerm_role_assignment" "main" {
   scope                = data.azurerm_subscription.main.id
   role_definition_name = "Owner"
   principal_id         = azurerm_user_assigned_identity.main.principal_id
+}
+
+resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.main.principal_id
+}
+
+resource "azurerm_role_assignment" "storage_queue_data_contributor" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Queue Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.main.principal_id
+}
+
+data  "azurerm_client_config" "current" {
+}
+
+output "account_id" {
+  value = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "storage_blob_data_contributor_user" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "storage_queue_data_contributor_user" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Queue Data Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
