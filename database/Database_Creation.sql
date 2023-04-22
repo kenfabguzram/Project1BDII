@@ -1,4 +1,3 @@
-
 BEGIN TRANSACTION;
 
 DROP TABLE IF EXISTS EvaluacionesComentarios;
@@ -199,7 +198,8 @@ CREATE TABLE AsistentesProfesores (
 CREATE TABLE Estudiantes (
     Id INT PRIMARY KEY,
     Carne VARCHAR(10) NOT NULL,
-    Contrasena VARCHAR(25) NOT NULL
+    Contrasena VARCHAR(25) NOT NULL,
+    IdPlan INT NOT NULL
 );
 
 CREATE TABLE Grupos (
@@ -333,6 +333,13 @@ ALTER TABLE PlanesCursos
 ADD CONSTRAINT FK_PlanesCursos_Planes
 FOREIGN KEY (IdPlan)
 REFERENCES Carreras(Id);
+
+-- Estudiantes
+ALTER TABLE Estudiantes
+ADD CONSTRAINT FK_Estudiantes_Planes
+FOREIGN KEY (IdPlan)
+REFERENCES Planes(Id);
+
 -- Carreras
 ALTER TABLE Carreras
 ADD CONSTRAINT FK_Carreras_Escuelas
