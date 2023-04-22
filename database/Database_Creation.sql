@@ -1,36 +1,3 @@
-BEGIN TRANSACTION;
-
-DROP TABLE IF EXISTS EvaluacionesComentarios;
-DROP TABLE IF EXISTS EvaluacionesArchivos;
-DROP TABLE IF EXISTS Evaluaciones;
-DROP TABLE IF EXISTS Actividades;
-DROP TABLE IF EXISTS PeriodosMatricula;
-DROP TABLE IF EXISTS Rubros;
-DROP TABLE IF EXISTS EvaluacionCurso;
-DROP TABLE IF EXISTS PlanesCursosDependencias;
-DROP TABLE IF EXISTS ArchivosCarreras;
-DROP TABLE IF EXISTS Archivos;
-DROP TABLE IF EXISTS TipoArchivo;
-DROP TABLE IF EXISTS Planes;
-DROP TABLE IF EXISTS PlanesCursosRequisitos;
-DROP TABLE IF EXISTS PlanesCursos;
-DROP TABLE IF EXISTS EstadosPlan;
-DROP TABLE IF EXISTS Carreras;
-DROP TABLE IF EXISTS PeriodosLectivosCursos;
-DROP TABLE IF EXISTS Cursos;
-DROP TABLE IF EXISTS Escuelas;
-DROP TABLE IF EXISTS Profesores;
-DROP TABLE IF EXISTS AsistentesProfesores;
-DROP TABLE IF EXISTS Estudiantes;
-DROP TABLE IF EXISTS GruposHorarios;
-DROP TABLE IF EXISTS Horarios;
-DROP TABLE IF EXISTS Grupos;
-DROP TABLE IF EXISTS PeriodosLectivos;
-DROP TABLE IF EXISTS Tipos;
-DROP TABLE IF EXISTS ActividadesEstudiantesArchivos;
-DROP TABLE IF EXISTS EstadosPeriodo;
-COMMIT TRANSACTION;
-
 CREATE TABLE EvaluacionesComentarios (
     Id int PRIMARY KEY IDENTITY (1, 1),
     IdEvaluacion int NOT NULL,
@@ -130,7 +97,7 @@ CREATE TABLE ArchivosCarreras (
 
 CREATE TABLE EstadosPlan (
     Id int PRIMARY KEY IDENTITY (1, 1),
-    Nombre varchar(7) NOT NULL
+    Nombre varchar(8) NOT NULL
 );
 
 CREATE TABLE Planes (
@@ -159,7 +126,7 @@ CREATE TABLE PlanesCursos (
 CREATE TABLE Carreras (
     Id int PRIMARY KEY IDENTITY (1, 1),
     IdEscuela int NOT NULL,
-    Nombre varchar(25) NOT NULL,
+    Nombre varchar(100) NOT NULL,
     Descripcion varchar(255)
 );
 
@@ -173,7 +140,7 @@ CREATE TABLE Cursos (
     Id int PRIMARY KEY IDENTITY (1, 1),
     IdTipo int NOT NULL,
     IdEscuela int NOT NULL,
-    Nombre varchar(25) NOT NULL,
+    Nombre varchar(100) NOT NULL,
     Creditos int NOT NULL,
     HorasPorSemana int NOT NULL,
     Descripcion varchar(255)
@@ -181,12 +148,13 @@ CREATE TABLE Cursos (
 
 CREATE TABLE Escuelas (
     Id int PRIMARY KEY IDENTITY (1, 1),
-    Nombre varchar(25) NOT NULL
+    Nombre varchar(100) NOT NULL
 );
 
 CREATE TABLE Profesores (
     Id int PRIMARY KEY,
-    IdEscuela int NOT NULL
+    IdEscuela int NOT NULL,
+    Nombre varchar(25) NOT NULL
 );
 
 CREATE TABLE AsistentesProfesores (
@@ -199,6 +167,9 @@ CREATE TABLE Estudiantes (
     Id INT PRIMARY KEY,
     Carne VARCHAR(10) NOT NULL,
     Contrasena VARCHAR(25) NOT NULL,
+    Nombre VARCHAR(25) NOT NULL,
+    Apellido1 VARCHAR(25) NOT NULL,
+    Apellido2 VARCHAR(25),
     IdPlan INT NOT NULL
 );
 
@@ -421,9 +392,9 @@ REFERENCES Horarios(Id);
 --ActividadesEstudiantesArchivos
 
 ALTER TABLE ActividadesEstudiantesArchivos
-ADD CONSTRAINT FK_ActividadesEstudiantesArchivos_ActividadesEstudiantes
+ADD CONSTRAINT FK_ActividadesEstudiantesArchivos_Actividades
 FOREIGN KEY (IdActividad)
-REFERENCES ActividadesEstudiantes(Id);
+REFERENCES Actividades(Id);
 
 ALTER TABLE ActividadesEstudiantesArchivos
 ADD CONSTRAINT FK_ActividadesEstudiantesArchivos_Estudiantes
