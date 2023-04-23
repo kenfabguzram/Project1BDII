@@ -200,6 +200,14 @@ CREATE TABLE ActividadesEstudiantesArchivos (
     IdEstudiante INT NOT NULL,
     IdArchivo INT NOT NULL
 );
+
+CREATE TABLE GruposEstudiantes (
+    Id INT PRIMARY KEY IDENTITY(1, 1),
+    IdEstudiante INT NOT NULL,
+    IdGrupo INT NOT NULL
+);
+
+
 -- EvaluacionesComentarios
 ALTER TABLE EvaluacionesComentarios
 ADD CONSTRAINT FK_EvaluacionesComentarios_Evaluaciones
@@ -272,8 +280,6 @@ FOREIGN KEY (IdCarrera) REFERENCES Carreras(Id);
 ALTER TABLE ArchivosCarreras
 ADD CONSTRAINT FK_ArchivosCarreras_Archivos
 FOREIGN KEY (IdArchivo) REFERENCES Archivos(Id);
-
--- EstadosPlan
 
 -- Planes
 ALTER TABLE Planes
@@ -377,7 +383,7 @@ ADD CONSTRAINT FK_Grupos_Profesores
 FOREIGN KEY (IdProfesor)
 REFERENCES Profesores(Id);
 
---GruposHorarios
+-- GruposHorarios
 
 ALTER TABLE GruposHorarios
 ADD CONSTRAINT FK_GruposHorarios_Grupos
@@ -389,7 +395,7 @@ ADD CONSTRAINT FK_GruposHorarios_Horarios
 FOREIGN KEY (IdHorario)
 REFERENCES Horarios(Id);
 
---ActividadesEstudiantesArchivos
+-- ActividadesEstudiantesArchivos
 
 ALTER TABLE ActividadesEstudiantesArchivos
 ADD CONSTRAINT FK_ActividadesEstudiantesArchivos_Actividades
@@ -405,3 +411,14 @@ ALTER TABLE ActividadesEstudiantesArchivos
 ADD CONSTRAINT FK_ActividadesEstudiantesArchivos_Archivos
 FOREIGN KEY (IdArchivo)
 REFERENCES Archivos(Id);
+
+-- GruposEstudiantes
+
+ALTER TABLE GruposEstudiantes
+ADD CONSTRAINT FK_GruposEstudiantes_Grupos
+FOREIGN KEY (IdGrupo)
+REFERENCES Grupos(Id);
+ALTER TABLE GruposEstudiantes
+ADD CONSTRAINT FK_GruposEstudiantes_Estudiantes
+FOREIGN KEY (IdEstudiante)
+REFERENCES Estudiantes(Id);

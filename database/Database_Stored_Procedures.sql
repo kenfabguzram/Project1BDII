@@ -55,3 +55,28 @@ AS
     VALUES (@Id, @IdEscuela, @Nombre);
     SET NOCOUNT OFF;
 GO
+
+CREATE OR ALTER PROCEDURE dbo.SpAgregarEstudiante
+@Id INT,
+@Carne VARCHAR(10),
+@Contrasena VARCHAR(25),
+@Nombre VARCHAR(25),
+@Apellido1 VARCHAR(25),
+@Apellido2 VARCHAR(25),
+@IdPlan INT
+AS
+    SET NOCOUNT ON;
+	INSERT INTO dbo.Estudiantes (Id, Carne, Contrasena, Nombre, Apellido1, Apellido2, IdPlan)
+    VALUES (@Id, @Carne, @Contrasena, @Nombre, @Apellido1, @Apellido2, @IdPlan);
+    SET NOCOUNT OFF;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.SpMatricularEstudiante
+@IdEstudiante INT,
+@IdGrupo INT
+AS
+    SET NOCOUNT ON;
+	INSERT INTO dbo.GruposEstudiantes (IdEstudiante, IdGrupo)
+    VALUES (@IdEstudiante, @IdGrupo);
+    SET NOCOUNT OFF;
+GO
