@@ -17,59 +17,73 @@ from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 
-#Setup the blob service client
+# Setup the blob service client
 default_credential = DefaultAzureCredential()
-if 'ACCOUNT_URL' in os.environ:
-    blob_service_client = BlobServiceClient(os.environ['ACCOUNT_URL'], credential=default_credential)
-
+if "ACCOUNT_URL" in os.environ:
+    blob_service_client = BlobServiceClient(
+        os.environ["ACCOUNT_URL"], credential=default_credential
+    )
 
 
 # Initialize Flask
 app = Flask(__name__)
 
 # Setup Azure Monitor
-if 'APPINSIGHTS_KEY' in os.environ:
+if "APPINSIGHTS_KEY" in os.environ:
     middleware = FlaskMiddleware(
         app,
-        exporter=AzureExporter(connection_string="InstrumentationKey={0}".format(os.environ['APPINSIGHTS_KEY'])),
+        exporter=AzureExporter(
+            connection_string="InstrumentationKey={0}".format(
+                os.environ["APPINSIGHTS_KEY"]
+            )
+        ),
         sampler=ProbabilitySampler(rate=1.0),
     )
 
 # Setup Flask Restful framework
 api = Api(app)
 parser = reqparse.RequestParser()
-parser.add_argument('customer')
-parser.add_argument('Cursos')
-parser.add_argument('archivo')
+parser.add_argument("customer")
+parser.add_argument("Cursos")
+parser.add_argument("archivo")
+
+
 # Implement singleton to avoid global objects
-class ConnectionManager(object):    
+class ConnectionManager(object):
     __instance = None
     __connection = None
     __lock = Lock()
 
     def __new__(cls):
         if ConnectionManager.__instance is None:
-            ConnectionManager.__instance = object.__new__(cls)        
-        return ConnectionManager.__instance       
-    
+            ConnectionManager.__instance = object.__new__(cls)
+        return ConnectionManager.__instance
+
     def __getConnection(self):
-        if (self.__connection == None):
-            application_name = ";APP={0}".format(socket.gethostname())  
-            self.__connection = pyodbc.connect(os.environ['SQLAZURECONNSTR_WWIF'] + application_name)                  
-        
+        if self.__connection == None:
+            application_name = ";APP={0}".format(socket.gethostname())
+            self.__connection = pyodbc.connect(
+                os.environ["SQLAZURECONNSTR_WWIF"] + application_name
+            )
+
         return self.__connection
 
     def __removeConnection(self):
         self.__connection = None
 
-    @retry(stop=stop_after_attempt(3), wait=wait_fixed(10), retry=retry_if_exception_type(pyodbc.OperationalError), after=after_log(app.logger, logging.DEBUG))
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_fixed(10),
+        retry=retry_if_exception_type(pyodbc.OperationalError),
+        after=after_log(app.logger, logging.DEBUG),
+    )
     def executeQueryJSON(self, procedure, payload=None):
-        result = {}  
+        result = {}
         try:
             conn = self.__getConnection()
 
             cursor = conn.cursor()
-            
+
             if payload:
                 cursor.execute(f"EXEC {procedure} ?", json.dumps(payload))
             else:
@@ -78,84 +92,129 @@ class ConnectionManager(object):
             result = cursor.fetchone()
 
             if result:
-                result = json.loads(result[0])                           
+                result = json.loads(result[0])
             else:
                 result = {}
 
-            cursor.commit()    
-        except pyodbc.OperationalError as e:            
+            cursor.commit()
+        except pyodbc.OperationalError as e:
             app.logger.error(f"{e.args[1]}")
             if e.args[0] == "08S01":
-                # If there is a "Communication Link Failure" error, 
+                # If there is a "Communication Link Failure" error,
                 # then connection must be removed
                 # as it will be in an invalid state
-                self.__removeConnection() 
-                raise                        
+                self.__removeConnection()
+                raise
         finally:
             cursor.close()
-                         
+
         return result
+
 
 class Queryable(Resource):
     def executeQueryJson(self, verb, payload=None):
-        result = {}  
+        result = {}
         entity = type(self).__name__.lower()
         procedure = f"web.{verb}_{entity}"
         result = ConnectionManager().executeQueryJSON(procedure, payload)
         return result
 
+
 # Customer Class
 class Customer(Queryable):
-    def get(self, customer_id):     
+    def get(self, customer_id):
         customer = {}
         customer["CustomerID"] = customer_id
-        result = self.executeQueryJson("get", customer)   
+        result = self.executeQueryJson("get", customer)
         return result, 200
-    
+
     def put(self):
         args = parser.parse_args()
-        customer = json.loads(args['customer'])
+        customer = json.loads(args["customer"])
         result = self.executeQueryJson("put", customer)
         return result, 201
 
     def patch(self, customer_id):
         args = parser.parse_args()
-        customer = json.loads(args['customer'])
-        customer["CustomerID"] = customer_id        
+        customer = json.loads(args["customer"])
+        customer["CustomerID"] = customer_id
         result = self.executeQueryJson("patch", customer)
         return result, 202
 
-    def delete(self, customer_id):       
+    def delete(self, customer_id):
         customer = {}
         customer["CustomerID"] = customer_id
         result = self.executeQueryJson("delete", customer)
         return result, 202
 
+
 # Customers Class
 class Customers(Queryable):
-    def get(self):     
-        result = self.executeQueryJson("get")   
+    def get(self):
+        result = self.executeQueryJson("get")
         return result, 200
+
+
 class Archivo(Queryable):
-    def post(self):     
-        if request.method == 'POST':
-            if 'file' not in request.files:
-                flash('No file part')
+    def post(self):
+        if request.method == "POST":
+            if "file" not in request.files:
+                flash("No file part")
                 return "<p>Upload File!</p>"
-        file = request.files['file']
-        if file.filename == '':
-            return  "<p>Upload No name!</p>"
+        file = request.files["file"]
+        if file.filename == "":
+            return "<p>Upload No name!</p>"
         filename = secure_filename(file.filename)
-        blob_client = blob_service_client.get_blob_client(container='documents', blob=filename)
+        blob_client = blob_service_client.get_blob_client(
+            container="documents", blob=filename
+        )
         blob_client.upload_blob(file)
-        return   "<p>Upload!</p>"   
+        return "<p>Upload!</p>"
+
+
 class Cursos(Queryable):
     def get(self):
-        return [{"Curso": "Bases de datos", "Escuela": "Computación", "Grupo": 1, "Hora de inicio": "8:00", "Hora final": "9:30", "Profesor": "Juan", "Cupo": 25, "Periodo": "Semestre", "Estado": "Activo" }, { "Curso": "Programación Orientada a Objetos", "Escuela": "Ingeniería en Sistemas", "Grupo": 2, "Hora de inicio": "10:00", "Hora final": "11:30", "Profesor": "María", "Cupo": 30, "Periodo": "Cuatrimestre", "Estado": "Activo" }, { "Curso": "Análisis de Algoritmos", "Escuela": "Ciencias de la Computación", "Grupo": 3, "Hora de inicio": "12:00", "Hora final": "13:30", "Profesor": "Carlos", "Cupo": 20, "Periodo": "Trimestre", "Estado": "Activo" } ]
-        #result = self.executeQueryJson("get")   
-        #return result, 200
+        return [
+            {
+                "Curso": "Bases de datos",
+                "Escuela": "Computación",
+                "Grupo": 1,
+                "Hora de inicio": "8:00",
+                "Hora final": "9:30",
+                "Profesor": "Juan",
+                "Cupo": 25,
+                "Periodo": "Semestre",
+                "Estado": "Activo",
+            },
+            {
+                "Curso": "Programación Orientada a Objetos",
+                "Escuela": "Ingeniería en Sistemas",
+                "Grupo": 2,
+                "Hora de inicio": "10:00",
+                "Hora final": "11:30",
+                "Profesor": "María",
+                "Cupo": 30,
+                "Periodo": "Cuatrimestre",
+                "Estado": "Activo",
+            },
+            {
+                "Curso": "Análisis de Algoritmos",
+                "Escuela": "Ciencias de la Computación",
+                "Grupo": 3,
+                "Hora de inicio": "12:00",
+                "Hora final": "13:30",
+                "Profesor": "Carlos",
+                "Cupo": 20,
+                "Periodo": "Trimestre",
+                "Estado": "Activo",
+            },
+        ]
+        # result = self.executeQueryJson("get")
+        # return result, 200
+
+
 # Create API routes
-api.add_resource(Customer, '/customer', '/customer/<customer_id>')
-api.add_resource(Customers, '/customers')
-api.add_resource(Archivo, '/upload')
-api.add_resource(Cursos, '/Cursos')
+api.add_resource(Customer, "/customer", "/customer/<customer_id>")
+api.add_resource(Customers, "/customers")
+api.add_resource(Archivo, "/upload")
+api.add_resource(Cursos, "/Cursos")
