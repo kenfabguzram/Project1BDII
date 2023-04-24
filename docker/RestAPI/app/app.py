@@ -15,6 +15,10 @@ from werkzeug.utils import secure_filename
 import uuid
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from ssl import PROTOCOL_TLS, SSLContext, CERT_NONE
+from cassandra.cluster import Cluster
+from cassandra.auth import PlainTextAuthProvider
+from flask_cors import CORS
 
 
 #Setup the blob service client
@@ -26,6 +30,7 @@ if 'ACCOUNT_URL' in os.environ:
 
 # Initialize Flask
 app = Flask(__name__)
+CORS(app)
 
 # Setup Azure Monitor
 if 'APPINSIGHTS_KEY' in os.environ:
@@ -154,8 +159,32 @@ class Cursos(Queryable):
         return [{"Curso": "Bases de datos", "Escuela": "Computación", "Grupo": 1, "Hora de inicio": "8:00", "Hora final": "9:30", "Profesor": "Juan", "Cupo": 25, "Periodo": "Semestre", "Estado": "Activo" }, { "Curso": "Programación Orientada a Objetos", "Escuela": "Ingeniería en Sistemas", "Grupo": 2, "Hora de inicio": "10:00", "Hora final": "11:30", "Profesor": "María", "Cupo": 30, "Periodo": "Cuatrimestre", "Estado": "Activo" }, { "Curso": "Análisis de Algoritmos", "Escuela": "Ciencias de la Computación", "Grupo": 3, "Hora de inicio": "12:00", "Hora final": "13:30", "Profesor": "Carlos", "Cupo": 20, "Periodo": "Trimestre", "Estado": "Activo" } ]
         #result = self.executeQueryJson("get")   
         #return result, 200
+
+class Cassandra(Queryable):
+    def post(self):
+        if request.method == 'POST':
+            #Get Data
+            message = request.get_json()
+            # Create authentication info
+            # Use username and password provide by Azure Cosmos
+            ssl_context = SSLContext(PROTOCOL_TLS)
+            ssl_context.verify_mode = CERT_NONE
+            auth_provider = PlainTextAuthProvider(username='tfex-cosmos-db-31154', password='C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==')
+            # Create the connection with cassandra
+            cluster = Cluster(['tfex-cosmos-db-31154.cassandra.cosmos.azure.com'], port = 10350, auth_provider=auth_provider,ssl_context=ssl_context)
+            # Create the session
+            session = cluster.connect()
+            # Insert data
+            query = 'INSERT INTO "tfex-cosmos-cassandra-keyspace".userlogs (user_id, logline) VALUES (%s, %s)'
+            session.execute(query,(message['user_id'],message['logline']))
+            # Close the session and the connection
+            session.shutdown()
+            cluster.shutdown()
+            return message
+ 
 # Create API routes
 api.add_resource(Customer, '/customer', '/customer/<customer_id>')
 api.add_resource(Customers, '/customers')
 api.add_resource(Archivo, '/upload')
 api.add_resource(Cursos, '/Cursos')
+api.add_resource(Cassandra,'/Cassandra')
