@@ -1,7 +1,10 @@
 <script lang="ts">
 //import Item from './components/Item.vue'
+  import itemList from './components/itemList.vue';
   export default {
-    name: 'itemList',
+    components: {
+      itemList
+    },
     data(){
       return {
         items : [
@@ -17,11 +20,12 @@
 <template>
   <!--<Item title="Nombre del archivo" data="Datos del archivo" :isFile="true"></Item>
   <Item title="Nombre del archivo2" data="Datos del archivo3" :isFile="true"></Item>
-  <Item title="Nombre de la carpeta" data="Datos de la carpeta" :isFile="false"></Item>-->
+  <Item title="Nombre de la carpeta" data="Datos de la carpeta" :isFile="false"></Item>--
   <div v-for="item in items">
     <p class="title">{{ item.title }}</p>
     <p class="data"> {{ item.data }}</p>
-  </div>
+  </div>-->
+  <itemList />
 </template>
 
 <style scoped>
