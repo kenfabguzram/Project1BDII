@@ -32,9 +32,6 @@ AS
     SET NOCOUNT OFF;
 GO
 
-EXEC dbo.SpCursosEstudiante @IdEstudiante=216
-go
-
 CREATE OR ALTER PROCEDURE dbo.SpBuscarIdEscuela
 @Nombre VARCHAR(25)
 AS
@@ -55,6 +52,7 @@ AS
     VALUES (@Id, @IdEscuela, @Nombre);
     SET NOCOUNT OFF;
 GO
+
 
 CREATE OR ALTER PROCEDURE dbo.SpAgregarEstudiante
 @Id INT,

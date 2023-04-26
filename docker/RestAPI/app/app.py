@@ -1,21 +1,19 @@
-import sys
 import os
-import json
 import pyodbc
-import socket
-from flask import Flask, flash, request, redirect, url_for, send_from_directory
-from flask_restful import reqparse, abort, Api, Resource
-from threading import Lock
-from tenacity import *
+import flask
 from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace.samplers import ProbabilitySampler
-import logging
-from werkzeug.utils import secure_filename
-import uuid
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
+# server = "your_server.database.windows.net"
+# database = "your_database"
+# username = "your_username"
+# password = "your_password"
+# driver = "{ODBC Driver 13 for SQL Server}"
+
+app = flask.Flask(__name__)
 
 # Setup the blob service client
 default_credential = DefaultAzureCredential()
@@ -23,10 +21,6 @@ if "ACCOUNT_URL" in os.environ:
     blob_service_client = BlobServiceClient(
         os.environ["ACCOUNT_URL"], credential=default_credential
     )
-
-
-# Initialize Flask
-app = Flask(__name__)
 
 # Setup Azure Monitor
 if "APPINSIGHTS_KEY" in os.environ:
@@ -40,181 +34,175 @@ if "APPINSIGHTS_KEY" in os.environ:
         sampler=ProbabilitySampler(rate=1.0),
     )
 
-# Setup Flask Restful framework
-api = Api(app)
-parser = reqparse.RequestParser()
-parser.add_argument("customer")
-parser.add_argument("Cursos")
-parser.add_argument("archivo")
+
+def connect_to_database():
+    print(f"env: {os.environ['SQLAZURECONNSTR_WWIF']}")
+    try:
+        conn = pyodbc.connect(os.environ["SQLAZURECONNSTR_WWIF"], timeout=10)
+        return conn
+    except pyodbc.Error as e:
+        print(f"Error connecting to database: {e}")
+        return None
 
 
-# Implement singleton to avoid global objects
-class ConnectionManager(object):
-    __instance = None
-    __connection = None
-    __lock = Lock()
-
-    def __new__(cls):
-        if ConnectionManager.__instance is None:
-            ConnectionManager.__instance = object.__new__(cls)
-        return ConnectionManager.__instance
-
-    def __getConnection(self):
-        if self.__connection == None:
-            application_name = ";APP={0}".format(socket.gethostname())
-            self.__connection = pyodbc.connect(
-                os.environ["SQLAZURECONNSTR_WWIF"] + application_name
-            )
-
-        return self.__connection
-
-    def __removeConnection(self):
-        self.__connection = None
-
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_fixed(10),
-        retry=retry_if_exception_type(pyodbc.OperationalError),
-        after=after_log(app.logger, logging.DEBUG),
-    )
-    def executeQueryJSON(self, procedure, payload=None):
-        result = {}
-        try:
-            conn = self.__getConnection()
-
-            cursor = conn.cursor()
-
-            if payload:
-                cursor.execute(f"EXEC {procedure} ?", json.dumps(payload))
+def generate_sp_exec_str(sp_name: str, arguments={}):
+    if len(arguments) == 0:
+        return f"EXEC dbo.{sp_name};"
+    else:
+        keys_list = [k for k in arguments.keys()]
+        str_ret = f"EXEC dbo.{sp_name}"
+        for key in keys_list:
+            value = arguments[key]
+            if isinstance(value, str):
+                str_ret += f" @{key}='{value}',"
             else:
-                cursor.execute(f"EXEC {procedure}")
-
-            result = cursor.fetchone()
-
-            if result:
-                result = json.loads(result[0])
-            else:
-                result = {}
-
-            cursor.commit()
-        except pyodbc.OperationalError as e:
-            app.logger.error(f"{e.args[1]}")
-            if e.args[0] == "08S01":
-                # If there is a "Communication Link Failure" error,
-                # then connection must be removed
-                # as it will be in an invalid state
-                self.__removeConnection()
-                raise
-        finally:
-            cursor.close()
-
-        return result
+                str_ret += f" @{key}={value},"
+        return str_ret[:-1] + ";"
 
 
-class Queryable(Resource):
-    def executeQueryJson(self, verb, payload=None):
-        result = {}
-        entity = type(self).__name__.lower()
-        procedure = f"web.{verb}_{entity}"
-        result = ConnectionManager().executeQueryJSON(procedure, payload)
-        return result
+# def exec_query_f(query: str):
+#     results_list = []
+#     with pyodbc.connect(os.environ["SQLAZURECONNSTR_WWIF"]) as conn:
+#         with conn.cursor() as cursor:
+#             cursor.execute(query)
+#             row_dict = [
+#                 dict((cursor.description[i][0], value) for i, value in enumerate(row))
+#                 for row in cursor.fetchall()
+#             ]
+#             print(row_dict)
 
 
-# Customer Class
-class Customer(Queryable):
-    def get(self, customer_id):
-        customer = {}
-        customer["CustomerID"] = customer_id
-        result = self.executeQueryJson("get", customer)
-        return result, 200
+def exec_query_get(query: str):
+    conn = connect_to_database()
+    print(f"query: {query}")
+    if conn is not None:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
 
-    def put(self):
-        args = parser.parse_args()
-        customer = json.loads(args["customer"])
-        result = self.executeQueryJson("put", customer)
-        return result, 201
+        # get the column names
+        columns = [column[0] for column in cursor.description]
 
-    def patch(self, customer_id):
-        args = parser.parse_args()
-        customer = json.loads(args["customer"])
-        customer["CustomerID"] = customer_id
-        result = self.executeQueryJson("patch", customer)
-        return result, 202
+        # create a dictionary for each row
+        data = []
+        for row in rows:
+            row_dict = {}
+            for i, column in enumerate(columns):
+                row_dict[column] = row[i]
+            data.append(row_dict)
 
-    def delete(self, customer_id):
-        customer = {}
-        customer["CustomerID"] = customer_id
-        result = self.executeQueryJson("delete", customer)
-        return result, 202
+        return flask.jsonify({"data": data})
+    else:
+        return {"error": "Unable to connect to database"}
 
 
-# Customers Class
-class Customers(Queryable):
-    def get(self):
-        result = self.executeQueryJson("get")
-        return result, 200
+def exec_query(query: str):
+    conn = connect_to_database()
+    print(f"query: {query}")
+    if conn is not None:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        conn.commit()
+        return "Successful query"
+    else:
+        return "Error: unable to connect to database"
 
 
-class Archivo(Queryable):
-    def post(self):
-        if request.method == "POST":
-            if "file" not in request.files:
-                flash("No file part")
-                return "<p>Upload File!</p>"
-        file = request.files["file"]
-        if file.filename == "":
-            return "<p>Upload No name!</p>"
-        filename = secure_filename(file.filename)
-        blob_client = blob_service_client.get_blob_client(
-            container="documents", blob=filename
-        )
-        blob_client.upload_blob(file)
-        return "<p>Upload!</p>"
+# my_query = query_db("select * from majorroadstiger limit %s", (3,))
 
 
-class Cursos(Queryable):
-    def get(self):
-        return [
-            {
-                "Curso": "Bases de datos",
-                "Escuela": "Computación",
-                "Grupo": 1,
-                "Hora de inicio": "8:00",
-                "Hora final": "9:30",
-                "Profesor": "Juan",
-                "Cupo": 25,
-                "Periodo": "Semestre",
-                "Estado": "Activo",
-            },
-            {
-                "Curso": "Programación Orientada a Objetos",
-                "Escuela": "Ingeniería en Sistemas",
-                "Grupo": 2,
-                "Hora de inicio": "10:00",
-                "Hora final": "11:30",
-                "Profesor": "María",
-                "Cupo": 30,
-                "Periodo": "Cuatrimestre",
-                "Estado": "Activo",
-            },
-            {
-                "Curso": "Análisis de Algoritmos",
-                "Escuela": "Ciencias de la Computación",
-                "Grupo": 3,
-                "Hora de inicio": "12:00",
-                "Hora final": "13:30",
-                "Profesor": "Carlos",
-                "Cupo": 20,
-                "Periodo": "Trimestre",
-                "Estado": "Activo",
-            },
-        ]
-        # result = self.executeQueryJson("get")
-        # return result, 200
+@app.route("/estudiante/matricula/cursos", methods=["POST"])
+def get_student_enrollment_courses():
+    json_input = flask.request.get_json()
+    student_id = json_input["Id"]
+    query_str = generate_sp_exec_str("SpCursosEstudiante", {"IdEstudiante": student_id})
+    return exec_query_get(query_str)
 
 
-# Create API routes
-api.add_resource(Customer, "/customer", "/customer/<customer_id>")
-api.add_resource(Customers, "/customers")
-api.add_resource(Archivo, "/upload")
-api.add_resource(Cursos, "/Cursos")
+@app.route("/profesor/agregar", methods=["PUT"])
+def add_teacher():
+    json_input = flask.request.get_json()
+    teacher_id = json_input["Id"]
+    school_id = json_input["SchoolId"]
+    teacher_name = json_input["Name"]
+    dict_query = {"Id": teacher_id, "IdEscuela": school_id, "Nombre": teacher_name}
+    query_str = generate_sp_exec_str("SpAgregarProfesor", dict_query)
+    return exec_query(query_str)
+
+
+@app.route("/estudiante/agregar", methods=["PUT"])
+def add_student():
+    json_input = flask.request.get_json()
+    _id = json_input["Id"]
+    student_id = json_input["StudentId"]
+    password = json_input["Password"]
+    student_name = json_input["Name"]
+    student_last_name_1 = json_input["LastName1"]
+    student_last_name_2 = json_input["LastName2"]
+    id_plan = json_input["IdPlan"]
+    dict_query = {
+        "Id": _id,
+        "Carne": student_id,
+        "Contrasena": password,
+        "Nombre": student_name,
+        "Apellido1": student_last_name_1,
+        "Apellido2": student_last_name_2,
+        "IdPlan": id_plan,
+    }
+    query_str = generate_sp_exec_str("SpAgregarEstudiante", dict_query)
+    return exec_query(query_str)
+
+
+@app.route("/estudiante/matricula", methods=["PUT"])
+def enroll_student():
+    json_input = flask.request.get_json()
+    student_id = json_input["StudentId"]
+    group_id = json_input["GroupId"]
+    dict_query = {"IdEstudiante": student_id, "IdGrupo": group_id}
+    query_str = generate_sp_exec_str("SpMatricularEstudiante", dict_query)
+    return exec_query(query_str)
+
+
+@app.route("/Cursos")
+def test_get():
+    return [
+        {
+            "Curso": "Bases de datos",
+            "Escuela": "Computación",
+            "Grupo": 1,
+            "Hora de inicio": "8:00",
+            "Hora final": "9:30",
+            "Profesor": "Juan",
+            "Cupo": 25,
+            "Periodo": "Semestre",
+            "Estado": "Activo",
+        },
+        {
+            "Curso": "Programación Orientada a Objetos",
+            "Escuela": "Ingeniería en Sistemas",
+            "Grupo": 2,
+            "Hora de inicio": "10:00",
+            "Hora final": "11:30",
+            "Profesor": "María",
+            "Cupo": 30,
+            "Periodo": "Cuatrimestre",
+            "Estado": "Activo",
+        },
+        {
+            "Curso": "Análisis de Algoritmos",
+            "Escuela": "Ciencias de la Computación",
+            "Grupo": 3,
+            "Hora de inicio": "12:00",
+            "Hora final": "13:30",
+            "Profesor": "Carlos",
+            "Cupo": 20,
+            "Periodo": "Trimestre",
+            "Estado": "Activo",
+        },
+    ]
+    # result = self.executeQueryJson("get")
+    # return result, 200
+
+
+if __name__ == "__main__":
+    app.run()
