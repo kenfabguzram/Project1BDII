@@ -1,6 +1,6 @@
 
-docker build -t kenfabguzram/restful-api .
-docker push kenfabguzram/restful-api
+docker build -t kenfabguzram/nodejs-app .
+docker push kenfabguzram/nodejs-app
 cd ..
 cd ..
 cd infrastructure

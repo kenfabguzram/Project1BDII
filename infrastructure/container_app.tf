@@ -31,7 +31,7 @@ template {
     max_replicas = 10
     min_replicas = 0
     container {
-      name   = "api-demo"
+      name   = "restful-api"
       image  = "docker.io/kenfabguzram/restful-api:latest"
       cpu    = "0.25"
       memory = "0.5Gi"

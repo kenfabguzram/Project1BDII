@@ -75,23 +75,30 @@ resource "azurerm_cosmosdb_cassandra_keyspace" "main" {
 }
 
 
-resource "azurerm_cosmosdb_cassandra_table" "main" {
-  name                  = "userlogs"
-  cassandra_keyspace_id = azurerm_cosmosdb_cassandra_keyspace.main.id
-
-  schema {
-    column {
-      name = "logline"
-      type = "varchar"
-    }
-
-    column {
-      name = "user_id"
-      type = "varchar"
-    }
-
-    partition_key {
-      name = "user_id"
-    }
-  }
+resource "azurerm_cosmosdb_cassandra_table" "main" { 
+  name                  = "userlogs" 
+  cassandra_keyspace_id = azurerm_cosmosdb_cassandra_keyspace.main.id 
+ 
+  schema { 
+    column { 
+      name = "logline" 
+      type = "varchar" 
+    } 
+ 
+    column { 
+      name = "user_id" 
+      type = "varchar" 
+    } 
+    column { 
+      name = "event_timestamp" 
+      type = "timestamp" 
+    } 
+ 
+    partition_key { 
+      name = "user_id" 
+    } 
+    partition_key { 
+      name = "event_timestamp" 
+    } 
+  } 
 }

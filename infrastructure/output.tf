@@ -21,4 +21,3 @@ output "container_outbound_ip_addresses" {
 output "container_fqdn" {
   value = azurerm_container_app.main.ingress[*].fqdn
 }
-
