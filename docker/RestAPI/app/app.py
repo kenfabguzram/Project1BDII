@@ -13,6 +13,8 @@ from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 import datetime
 
+import pytz
+
 # server = "your_server.database.windows.net"
 # database = "your_database"
 # username = "your_username"
@@ -234,11 +236,11 @@ def cassandra():
     session, cluster = connect_to_cassandra()
 
     #Get Timestamp
-    #timestamp = datetime.datetime.now().timestamp()
+    timestamp = datetime.datetime.now(pytz.utc)
 
     # Insert data
-    query = 'INSERT INTO "tfex-cosmos-cassandra-keyspace".userlogs (user_id, logline) VALUES (%s, %s)'
-    session.execute(query,(message['user_id'],message['logline']))
+    query = 'INSERT INTO "tfex-cosmos-cassandra-keyspace".userlogs (user_id, logline, event_timestamp) VALUES (%s, %s, %s)'
+    session.execute(query,(message['user_id'],message['logline'],timestamp))
     # Close the session and the connection
     session.shutdown()
     cluster.shutdown()
