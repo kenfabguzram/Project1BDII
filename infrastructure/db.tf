@@ -73,8 +73,6 @@ resource "azurerm_cosmosdb_cassandra_keyspace" "main" {
   account_name        = azurerm_cosmosdb_account.main.name
   throughput          = 400
 }
-
-
 resource "azurerm_cosmosdb_cassandra_table" "main" { 
   name                  = "userlogs" 
   cassandra_keyspace_id = azurerm_cosmosdb_cassandra_keyspace.main.id 
@@ -89,6 +87,7 @@ resource "azurerm_cosmosdb_cassandra_table" "main" {
       name = "user_id" 
       type = "varchar" 
     } 
+
     column { 
       name = "event_timestamp" 
       type = "timestamp" 
@@ -97,8 +96,9 @@ resource "azurerm_cosmosdb_cassandra_table" "main" {
     partition_key { 
       name = "user_id" 
     } 
+    
     partition_key { 
-      name = "event_timestamp" 
-    } 
-  } 
+      name = "event_timestamp"
+    } 
+  }
 }
