@@ -25,7 +25,6 @@ app = flask.Flask(__name__)
 CORS(app)
 
 
-
 # Setup the blob service client
 default_credential = DefaultAzureCredential()
 if "ACCOUNT_URL" in os.environ:
@@ -69,20 +68,28 @@ def generate_sp_exec_str(sp_name: str, arguments={}):
             else:
                 str_ret += f" @{key}={value},"
         return str_ret[:-1] + ";"
-    
+
+
 def connect_to_cassandra():
     # Create authentication info
     # Use username and password provide by Azure Cosmos
     ssl_context = SSLContext(PROTOCOL_TLS)
     ssl_context.verify_mode = CERT_NONE
-    auth_provider = PlainTextAuthProvider(username='tfex-cosmos-db-31154', password='C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==')
+    auth_provider = PlainTextAuthProvider(
+        username="tfex-cosmos-db-31154",
+        password="C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==",
+    )
     # Create the connection with cassandra
-    cluster = Cluster(['tfex-cosmos-db-31154.cassandra.cosmos.azure.com'], port = 10350, auth_provider=auth_provider,ssl_context=ssl_context)
+    cluster = Cluster(
+        ["tfex-cosmos-db-31154.cassandra.cosmos.azure.com"],
+        port=10350,
+        auth_provider=auth_provider,
+        ssl_context=ssl_context,
+    )
     # Create the session
     session = cluster.connect()
 
     return session, cluster
-
 
 
 # def exec_query_f(query: str):
@@ -228,19 +235,20 @@ def test_get():
     # result = self.executeQueryJson("get")
     # return result, 200
 
-@app.route('/Cassandra', methods=['POST'])
+
+@app.route("/Cassandra", methods=["POST"])
 def cassandra():
-    #Get Data
+    # Get Data
     message = request.get_json()
 
     session, cluster = connect_to_cassandra()
 
-    #Get Timestamp
+    # Get Timestamp
     timestamp = datetime.datetime.now(pytz.utc)
 
     # Insert data
     query = 'INSERT INTO "tfex-cosmos-cassandra-keyspace".userlogs (user_id, logline, event_timestamp) VALUES (%s, %s, %s)'
-    session.execute(query,(message['user_id'],message['logline'],timestamp))
+    session.execute(query, (message["user_id"], message["logline"], timestamp))
     # Close the session and the connection
     session.shutdown()
     cluster.shutdown()
