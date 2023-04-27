@@ -136,7 +136,7 @@ def exec_query(query: str):
 # my_query = query_db("select * from majorroadstiger limit %s", (3,))
 
 
-@app.route("/estudiante/matricula/cursos", methods=["POST"])
+@app.route("/estudiante/matricula/cursos", methods=["GET"])
 def get_student_enrollment_courses():
     json_input = flask.request.get_json()
     student_id = json_input["Id"]
