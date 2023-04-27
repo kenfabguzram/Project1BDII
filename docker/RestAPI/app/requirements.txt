@@ -7,3 +7,6 @@ tenacity
 python-dotenv
 azure-storage-blob
 azure-identity
+flask_cors
+ssl
+cassandra-driver
