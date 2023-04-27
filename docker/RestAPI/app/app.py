@@ -7,19 +7,14 @@ from opencensus.trace.samplers import ProbabilitySampler
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from flask_cors import CORS
-from flask import request
 from ssl import PROTOCOL_TLS, SSLContext, CERT_NONE
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
+from werkzeug.utils import secure_filename
 import datetime
+import werkzeug.utils
 
 import pytz
-
-# server = "your_server.database.windows.net"
-# database = "your_database"
-# username = "your_username"
-# password = "your_password"
-# driver = "{ODBC Driver 13 for SQL Server}"
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -90,18 +85,6 @@ def connect_to_cassandra():
     session = cluster.connect()
 
     return session, cluster
-
-
-# def exec_query_f(query: str):
-#     results_list = []
-#     with pyodbc.connect(os.environ["SQLAZURECONNSTR_WWIF"]) as conn:
-#         with conn.cursor() as cursor:
-#             cursor.execute(query)
-#             row_dict = [
-#                 dict((cursor.description[i][0], value) for i, value in enumerate(row))
-#                 for row in cursor.fetchall()
-#             ]
-#             print(row_dict)
 
 
 def exec_query_get(query: str):
@@ -232,14 +215,28 @@ def test_get():
             "Estado": "Activo",
         },
     ]
-    # result = self.executeQueryJson("get")
-    # return result, 200
+
+
+@app.route("/files/upload", methods=["POST"])
+def post_file():
+    if "file" not in flask.request.files:
+        flask.flash("No file part")
+        return "<p>Upload File!</p>"
+    file = flask.request.files["file"]
+    if file.filename == "":
+        return "<p>Upload No name!</p>"
+    filename = secure_filename(file.filename)
+    blob_client = blob_service_client.get_blob_client(
+        container="documents", blob=filename
+    )
+    blob_client.upload_blob(file)
+    return "<p>Upload!</p>"
 
 
 @app.route("/Cassandra", methods=["POST"])
 def cassandra():
     # Get Data
-    message = request.get_json()
+    message = flask.request.get_json()
 
     session, cluster = connect_to_cassandra()
 
