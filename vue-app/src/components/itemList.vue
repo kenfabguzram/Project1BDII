@@ -3,6 +3,9 @@
 
     export default {
         name: 'itemList',
+        components: {
+            Item
+        },
         data(){
             return {
                 items : [
@@ -18,46 +21,29 @@
     
 <template>
     <div v-for="item in items" class="itemContainer">
-        <div class="imageContainer">
-            <img src="../assets/file.svg" v-if="item.isFile" alt="">
-            <img src="../assets/folder.svg" v-else alt="">
-        </div>
-        <div class="dataContainer">
-            <p class="title">{{ item.title }}</p>
-            <p class="data"> {{ item.data }}</p>
-        </div>
-        
+        <Item :title="item.title" :data="item.data" :isFile="item.isFile"></Item>
+    </div>
+    <div class="agregarItem">
+        <img src="../assets/plus.svg" alt="">
+        Agregar un archivo
     </div>
 </template>
 
 <style>
-    .itemContainer{
+    .agregarItem{
         border: 1px solid #005;
-        border-radius: 8px;
+        border-radius: 4px;
         display: flex;
-        padding: 8px;
-    }
-    .imageContainer{
-        width: fit-content;
-        height: 100%;
-        float: left;
-    }
-    .dataContainer{
-        width: auto;
-        height: 100%;
-        float: right;
-        margin-left: 8px;
-    }
-    .title{
+        cursor: pointer;
         font-size: 20px;
         line-height: 20px;
         font-family: 'Baskerville';
         color:#005;
+        padding: 8px;
+        align-items: center;
     }
-    .data{
-        font-size: 12px;
-        line-height: 20px;
-        font-family: 'Baskerville';
-        color: #005;
+    .agregarItem img{
+        width: 32px;
+        height: 32px;
     }
 </style>
