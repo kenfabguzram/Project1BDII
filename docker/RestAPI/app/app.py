@@ -233,6 +233,13 @@ def post_file():
     return "<p>Upload!</p>"
 
 
+@app.route("/files/visualize", methods=["GET"])
+def visualize_files():
+    container_client = blob_service_client.get_container_client(container="documents")
+    container_client.list_blobs()
+    # wip
+
+
 @app.route("/Cassandra", methods=["POST"])
 def cassandra():
     # Get Data
