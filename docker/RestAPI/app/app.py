@@ -22,6 +22,7 @@ CORS(app)
 
 # Setup the blob service client
 default_credential = DefaultAzureCredential()
+blob_service_client = None
 if "ACCOUNT_URL" in os.environ:
     blob_service_client = BlobServiceClient(
         os.environ["ACCOUNT_URL"], credential=default_credential
@@ -38,6 +39,28 @@ if "APPINSIGHTS_KEY" in os.environ:
         ),
         sampler=ProbabilitySampler(rate=1.0),
     )
+
+
+def connect_to_cassandra():
+    # Create authentication info
+    # Use username and password provide by Azure Cosmos
+    ssl_context = SSLContext(PROTOCOL_TLS)
+    ssl_context.verify_mode = CERT_NONE
+    auth_provider = PlainTextAuthProvider(
+        username="tfex-cosmos-db-31154",
+        password="C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==",
+    )
+    # Create the connection with cassandra
+    cluster = Cluster(
+        ["tfex-cosmos-db-31154.cassandra.cosmos.azure.com"],
+        port=10350,
+        auth_provider=auth_provider,
+        ssl_context=ssl_context,
+    )
+    # Create the session
+    session = cluster.connect()
+
+    return session, cluster
 
 
 def connect_to_database():
@@ -63,28 +86,6 @@ def generate_sp_exec_str(sp_name: str, arguments={}):
             else:
                 str_ret += f" @{key}={value},"
         return str_ret[:-1] + ";"
-
-
-def connect_to_cassandra():
-    # Create authentication info
-    # Use username and password provide by Azure Cosmos
-    ssl_context = SSLContext(PROTOCOL_TLS)
-    ssl_context.verify_mode = CERT_NONE
-    auth_provider = PlainTextAuthProvider(
-        username="tfex-cosmos-db-31154",
-        password="C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==",
-    )
-    # Create the connection with cassandra
-    cluster = Cluster(
-        ["tfex-cosmos-db-31154.cassandra.cosmos.azure.com"],
-        port=10350,
-        auth_provider=auth_provider,
-        ssl_context=ssl_context,
-    )
-    # Create the session
-    session = cluster.connect()
-
-    return session, cluster
 
 
 def exec_query_get(query: str):
@@ -131,6 +132,22 @@ def get_student_enrollment_courses():
     json_input = flask.request.get_json()
     student_id = json_input["Id"]
     query_str = generate_sp_exec_str("SpCursosEstudiante", {"IdEstudiante": student_id})
+    return exec_query_get(query_str)
+
+
+@app.route("/planes", methods=["GET"])
+def get_plans():
+    json_input = flask.request.get_json()
+    career_id = json_input["Id"]
+    query_str = generate_sp_exec_str(
+        "SpObtenerPlanesDeEstudio", {"IdCarrera": career_id}
+    )
+    return exec_query_get(query_str)
+
+
+@app.route("/carreras", methods=["GET"])
+def get_careers():
+    query_str = generate_sp_exec_str("SpObtenerCarreras")
     return exec_query_get(query_str)
 
 
@@ -236,7 +253,9 @@ def post_file():
 @app.route("/files/visualize", methods=["GET"])
 def visualize_files():
     container_client = blob_service_client.get_container_client(container="documents")
-    container_client.list_blobs()
+    blob_list = container_client.list_blobs()
+    for blob in blob_list:
+        print(blob.name)
     # wip
 
 

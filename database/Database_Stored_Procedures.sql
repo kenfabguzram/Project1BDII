@@ -1,3 +1,5 @@
+-- VIEWS
+
 CREATE OR ALTER VIEW dbo.ViewCursosDisponiblesMatricula
     AS
     SELECT 
@@ -15,6 +17,36 @@ CREATE OR ALTER VIEW dbo.ViewCursosDisponiblesMatricula
     INNER JOIN dbo.Planes AS P ON (P.Id = PC.IdPlan)
     INNER JOIN dbo.Estudiantes AS E ON (E.IdPlan = P.Id)
 GO
+
+CREATE OR ALTER VIEW dbo.ViewPlanes
+    AS
+    SELECT 
+        P.Id,
+        E.Nombre AS Estado,
+        C.Nombre AS Carrera,
+        C.Id AS IdCarrera,
+        P.Numero AS Numero,
+        P.FechaCreacion,
+        P.FechaActivacion,
+        P.FechaFinalizacion
+    FROM dbo.Planes AS P 
+    INNER JOIN dbo.EstadosPlan AS E ON (E.Id = P.IdEstadoPlan)
+    INNER JOIN dbo.Carreras AS C ON (C.Id = P.IdCarrera)
+GO
+
+CREATE OR ALTER VIEW dbo.ViewCarreras
+    AS
+    SELECT 
+        C.Id, 
+        E.Nombre AS Escuela, 
+        C.Nombre, 
+        C.Descripcion
+    FROM dbo.Carreras AS C 
+    INNER JOIN dbo.Escuelas AS E ON (E.Id = C.IdEscuela)
+GO
+
+    
+-- STORED PROCEDURES
 
 CREATE OR ALTER PROCEDURE dbo.SpCursosEstudiante
 @IdEstudiante INT
@@ -43,7 +75,7 @@ AS
 GO
 
 CREATE OR ALTER PROCEDURE dbo.SpAgregarProfesor
-@Id INT,
+@Id CHAR(28),
 @IdEscuela INT,
 @Nombre VARCHAR(25)
 AS
@@ -53,9 +85,8 @@ AS
     SET NOCOUNT OFF;
 GO
 
-
 CREATE OR ALTER PROCEDURE dbo.SpAgregarEstudiante
-@Id INT,
+@Id CHAR(28),
 @Carne VARCHAR(10),
 @Contrasena VARCHAR(25),
 @Nombre VARCHAR(25),
@@ -76,5 +107,21 @@ AS
     SET NOCOUNT ON;
 	INSERT INTO dbo.GruposEstudiantes (IdEstudiante, IdGrupo)
     VALUES (@IdEstudiante, @IdGrupo);
+    SET NOCOUNT OFF;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.SpObtenerCarreras
+AS
+    SET NOCOUNT ON;
+    SELECT * FROM dbo.ViewCarreras;
+    SET NOCOUNT OFF;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.SpObtenerPlanesDeEstudio
+@IdCarrera INT
+AS
+    SET NOCOUNT ON;
+    SELECT * FROM dbo.ViewPlanes
+    WHERE IdCarrera = @IdCarrera;
     SET NOCOUNT OFF;
 GO

@@ -21,39 +21,6 @@ INSERT INTO Escuelas (Nombre) VALUES ('Escuela de Medicina');
 INSERT INTO Escuelas (Nombre) VALUES ('Escuela de Comunicación');
 GO
 
--- Agregar Profesores
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (101, 1, 'Juan Pérez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (102, 2, 'María Rodríguez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (103, 3, 'Pedro Hernández');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (104, 4, 'Ana Morales');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (105, 5, 'Carlos Sánchez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (106, 6, 'Laura Jiménez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (107, 7, 'Ricardo González');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (108, 8, 'Paulina Castro');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (109, 9, 'José Ramírez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (110, 10, 'Fernanda Castillo');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (111, 1, 'Cristina Gómez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (112, 2, 'Arturo Álvarez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (113, 3, 'Mónica Aguilar');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (114, 4, 'Roberto Flores');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (115, 5, 'Alejandra Torres');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (116, 6, 'Jorge Fernández');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (117, 7, 'Marcela Muñoz');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (118, 8, 'David Rodríguez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (119, 9, 'Diana García');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (120, 10, 'Andrés Castro');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (121, 1, 'Sofía Medina');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (122, 2, 'Pablo García');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (123, 3, 'Carmen López');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (124, 4, 'Rodrigo Valenzuela');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (125, 5, 'Liliana Ortiz');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (126, 6, 'Mario Solís');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (127, 7, 'Laura Torres');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (128, 8, 'Alejandro León');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (129, 9, 'Lucía Álvarez');
-INSERT INTO Profesores (Id, IdEscuela, Nombre) VALUES (130, 10, 'David Torres');
-GO
-
 -- Agregar Tipos de curso
 INSERT INTO Tipos (Nombre) VALUES ('Virtual');
 INSERT INTO Tipos (Nombre) VALUES ('Presencial');
@@ -216,49 +183,4 @@ INSERT INTO PlanesCursos (IdCurso, IdPlan)
 VALUES (19, 10);
 INSERT INTO PlanesCursos (IdCurso, IdPlan)
 VALUES (20, 10);
-GO
-
--- Agregar estudiantes
-INSERT INTO Estudiantes (Id, Carne, Contrasena, Nombre, Apellido1, Apellido2, IdPlan) 
-VALUES 
-  (211, '202200011', 'contraseña123', 'Luis', 'Fernández', 'González', 6),
-  (212, '202200012', 'contraseña123', 'Valentina', 'Castillo', 'Ramírez', 6),
-  (213, '202200013', 'contraseña123', 'Roberto', 'Gutiérrez', 'Méndez', 7),
-  (214, '202200014', 'contraseña123', 'Ana', 'Ramírez', 'Flores', 7),
-  (215, '202200015', 'contraseña123', 'María', 'Santos', 'Rojas', 8),
-  (216, '202200016', 'contraseña123', 'Miguel', 'Hernández', 'Gómez', 8),
-  (217, '202200017', 'contraseña123', 'Sofía', 'López', 'Rodríguez', 9),
-  (218, '202200018', 'contraseña123', 'Diego', 'García', 'Hernández', 9),
-  (219, '202200019', 'contraseña123', 'Alejandra', 'Martínez', 'Castro', 10),
-  (220, '202200020', 'contraseña123', 'Carlos', 'Sánchez', 'Gutiérrez', 10),
-  (221, '202200021', 'contraseña123', 'Laura', 'Fernández', 'González', 11),
-  (222, '202200022', 'contraseña123', 'Jorge', 'Castillo', 'Ramírez', 11),
-  (223, '202200023', 'contraseña123', 'Carolina', 'Gutiérrez', 'Méndez', 12),
-  (224, '202200024', 'contraseña123', 'Arturo', 'Ramírez', 'Flores', 12),
-  (225, '202200025', 'contraseña123', 'Elena', 'Santos', 'Rojas', 13),
-  (226, '202200026', 'contraseña123', 'Pablo', 'Hernández', 'Gómez', 13),
-  (227, '202200027', 'contraseña123', 'Lucía', 'López', 'Rodríguez', 14),
-  (228, '202200028', 'contraseña123', 'Gabriel', 'García', 'Hernández', 14),
-  (229, '202200029', 'contraseña123', 'Marcela', 'Martínez', 'Castro', 15),
-  (230, '202200030', 'contraseña123', 'Julián', 'Sánchez', 'Gutiérrez', 15),
-  (231, '202200031', 'contraseña123', 'Isabella', 'Fernández', 'González', 16),
-  (232, '202200032', 'contraseña123', 'Mateo', 'Castillo', 'Ramírez', 16),
-  (233, '202200033', 'contraseña123', 'Lucas', 'Gutiérrez', 'Méndez', 17),
-  (234, '202200034', 'contraseña123', 'Valeria', 'Ramírez', 'Flores', 17),
-  (235, '202200035', 'contraseña123', 'Camila', 'Santos', 'Rojas', 18),
-  (236, '202200036', 'contraseña123', 'Emiliano', 'Hernández', 'Gómez', 18),
-  (237, '202200037', 'contraseña123', 'Marina', 'López', 'Rodríguez', 19),
-  (238, '202200038', 'contraseña123', 'Samuel', 'García', 'Hernández', 19),
-  (239, '202200039', 'contraseña123', 'Renata', 'Martínez', 'Castro', 20),
-  (240, '202200040', 'contraseña123', 'Santiago', 'Sánchez', 'Gutiérrez', 20),
-  (241, '202200041', 'contraseña123', 'Julia', 'Fernández', 'González', 21),
-  (242, '202200042', 'contraseña123', 'Simón', 'Castillo', 'Ramírez', 21),
-  (243, '202200043', 'contraseña123', 'Daniel', 'Gutiérrez', 'Méndez', 22),
-  (244, '202200044', 'contraseña123', 'Florencia', 'Ramírez', 'Flores', 22),
-  (245, '202200045', 'contraseña123', 'Agustín', 'Santos', 'Rojas', 23),
-  (246, '202200046', 'contraseña123', 'Catalina', 'Hernández', 'Gómez', 23),
-  (247, '202200047', 'contraseña123', 'Esteban', 'López', 'Rodríguez', 24),
-  (248, '202200048', 'contraseña123', 'Jimena', 'García', 'Hernández', 24),
-  (249, '202200049', 'contraseña123', 'David', 'Martínez', 'Castro', 25),
-  (250, '202200050', 'contraseña123', 'Emma', 'Sánchez', 'Gutiérrez', 25);
 GO

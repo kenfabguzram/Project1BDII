@@ -8,3 +8,4 @@ opencensus-ext-flask
 pyodbc
 python-dotenv
 tenacity
+pytz
