@@ -195,7 +195,7 @@ def enroll_student():
     return exec_query(query_str)
 
 
-@app.route("/Cursos")
+@app.route("/Cursos", methods=["GET"])
 def test_get():
     return [
         {
