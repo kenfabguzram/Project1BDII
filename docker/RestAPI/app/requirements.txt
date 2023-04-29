@@ -7,4 +7,11 @@ azure-identity
 azure-storage-blob
 flask-cors
 cassandra-driver
+flask
+flask-cors
+opencensus-ext-azure
+opencensus-ext-flask
+pyodbc
+python-dotenv
+tenacity
 pytz

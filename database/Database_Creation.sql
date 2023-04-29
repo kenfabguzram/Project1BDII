@@ -152,19 +152,19 @@ CREATE TABLE Escuelas (
 );
 
 CREATE TABLE Profesores (
-    Id int PRIMARY KEY,
+    Id CHAR(28) PRIMARY KEY,
     IdEscuela int NOT NULL,
     Nombre varchar(25) NOT NULL
 );
 
 CREATE TABLE AsistentesProfesores (
     Id int PRIMARY KEY,
-    IdProfesor int NOT NULL,
-    IdEstudiante int NOT NULL
+    IdProfesor char(28) NOT NULL,
+    IdEstudiante char(28) NOT NULL
 );
 
 CREATE TABLE Estudiantes (
-    Id INT PRIMARY KEY,
+    Id CHAR(28) PRIMARY KEY,
     Carne VARCHAR(10) NOT NULL,
     Contrasena VARCHAR(25) NOT NULL,
     Nombre VARCHAR(25) NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE Grupos (
     Id INT PRIMARY KEY IDENTITY(1,1),
     IdPeriodo INT NOT NULL,
     IdCurso INT NOT NULL,
-    IdProfesor INT NOT NULL,
+    IdProfesor char(28) NOT NULL,
     MaxEstudiantes INT NOT NULL
 );
 
@@ -197,13 +197,13 @@ CREATE TABLE Horarios (
 CREATE TABLE ActividadesEstudiantesArchivos (
     Id INT PRIMARY KEY IDENTITY(1,1),
     IdActividad INT NOT NULL,
-    IdEstudiante INT NOT NULL,
+    IdEstudiante char(28) NOT NULL,
     IdArchivo INT NOT NULL
 );
 
 CREATE TABLE GruposEstudiantes (
     Id INT PRIMARY KEY IDENTITY(1, 1),
-    IdEstudiante INT NOT NULL,
+    IdEstudiante char(28) NOT NULL,
     IdGrupo INT NOT NULL
 );
 
