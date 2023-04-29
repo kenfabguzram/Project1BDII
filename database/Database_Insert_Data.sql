@@ -184,3 +184,68 @@ VALUES (19, 10);
 INSERT INTO PlanesCursos (IdCurso, IdPlan)
 VALUES (20, 10);
 GO
+
+-- Evaluaciones
+INSERT INTO Evaluaciones (IdActividad, Comentario, Nota)
+VALUES (1, 'Muy buen desempeño en esta actividad', 9.5),
+       (1, 'Excelente trabajo', 10),
+       (2, 'Necesitas practicar más', 6.5),
+       (2, 'Falta profundidad en tus respuestas', 7.5),
+       (3, 'Buen trabajo en esta actividad', 8.5),
+       (3, 'Sigue así', 9),
+       (4, 'Necesitas mejorar en la claridad de tus respuestas', 6.5),
+       (4, 'Revisa la organización de tus ideas', 7),
+       (5, 'Muy buen desempeño en esta actividad', 9),
+       (5, 'Excelente trabajo', 10),
+       (6, 'Necesitas practicar más', 7.5),
+       (6, 'Falta profundidad en tus respuestas', 7),
+       (7, 'Buen trabajo en esta actividad', 8),
+       (7, 'Sigue así', 8.5),
+       (8, 'Buen trabajo en esta actividad', 8),
+       (8, 'Sigue así', 8.5),
+       (9, 'Necesitas mejorar en la claridad de tus respuestas', 6),
+       (9, 'Revisa la organización de tus ideas', 7),
+       (10, 'Muy buen desempeño en esta actividad', 9.5),
+       (10, 'Excelente trabajo', 10),
+       (11, 'Necesitas practicar más', 7),
+       (11, 'Falta profundidad en tus respuestas', 7.5),
+       (12, 'Buen trabajo en esta actividad', 8),
+       (12, 'Sigue así', 8.5),
+       (13, 'Necesitas mejorar en la claridad de tus respuestas', 6),
+       (13, 'Revisa la organización de tus ideas', 7),
+       (14, 'Muy buen desempeño en esta actividad', 9.5),
+       (14, 'Excelente trabajo', 10),
+       (15, 'Necesitas practicar más', 7),
+       (15, 'Falta profundidad en tus respuestas', 7.5),
+       (16, 'Buen trabajo en esta actividad', 8),
+       (16, 'Sigue así', 8.5),
+       (17, 'Necesitas mejorar en la claridad de tus respuestas', 6);
+
+
+-- Comentarios de evaluaciones
+INSERT INTO EvaluacionesComentarios (IdEvaluacion, Comentario)
+VALUES (1, 'Buen trabajo en esta actividad'),
+       (1, 'Sigue así'),
+       (2, 'Necesitas mejorar en la organización'),
+       (2, 'Revisa la ortografía'),
+       (3, 'Muy buen desempeño en esta actividad'),
+       (3, 'Excelente trabajo'),
+       (4, 'Necesitas practicar más'),
+       (4, 'Falta profundidad en tus respuestas'),
+       (5, 'Buen trabajo en esta actividad'),
+       (5, 'Sigue así'),
+       (6, 'Necesitas mejorar en la organización'),
+       (6, 'Revisa la ortografía'),
+       (7, 'Muy buen desempeño en esta actividad'),
+       (7, 'Excelente trabajo'),
+       (8, 'Necesitas practicar más'),
+       (8, 'Falta profundidad en tus respuestas'),
+       (9, 'Buen trabajo en esta actividad'),
+       (9, 'Sigue así'),
+       (10, 'Necesitas mejorar en la organización'),
+       (10, 'Revisa la ortografía'),
+       (11, 'Muy buen desempeño en esta actividad'),
+       (11, 'Excelente trabajo'),
+       (12, 'Necesitas practicar más'),
+       (12, 'Falta profundidad en tus respuestas');
+       

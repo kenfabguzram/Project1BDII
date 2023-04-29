@@ -64,7 +64,7 @@ CREATE TABLE TipoArchivo (
 
 CREATE TABLE Archivos (
     Id int PRIMARY KEY IDENTITY (1, 1),
-    IdUsuario int NOT NULL,
+    IdUsuario char(28) NOT NULL,
     IdTipoArchivo int NOT NULL,
     IdPeriodo int NOT NULL,
     IdCurso int NOT NULL,
