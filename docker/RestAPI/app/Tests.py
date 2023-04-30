@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, Mock
 import requests
+from app import app
 
 class TestAPI(unittest.TestCase):
 
@@ -126,5 +127,5 @@ class TestAPI(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             #Contiene los datos deseados
 
-if __name__ == '_main_':
-   unittest.main()
+if __name__ == '__main__':
+    unittest.main()

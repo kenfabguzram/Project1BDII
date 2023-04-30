@@ -64,7 +64,7 @@ resource "azurerm_cosmosdb_account" "main" {
     failover_priority = 0
   }
 
-  ip_range_filter = "186.177.32.3"
+  ip_range_filter = "186.177.32.3,0.0.0.0"
 }
 
 resource "azurerm_cosmosdb_cassandra_keyspace" "main" {
