@@ -533,3 +533,24 @@ VALUES
   (29,28),
   (30,28);
 GO
+
+-- Insertar Comentarios de las evaluaciones
+INSERT INTO EvaluacionesComentarios (IdEvaluacion, Comentario)
+VALUES
+  (1,'Evaluacion del comentario 1'),
+  (2,'Evaluacion del comentario 2'),
+  (3,'Evaluacion del comentario 3'),
+  (4,'Evaluacion del comentario 4'),
+  (5,'Evaluacion del comentario 5'),
+  (6,'Evaluacion del comentario 6'),
+  (7,'Evaluacion del comentario 7'),
+  (8,'Evaluacion del comentario 8'),
+  (9,'Evaluacion del comentario 9'),
+  (10,'Evaluacion del comentario 10'),
+  (11,'Evaluacion del comentario 11'),
+  (12,'Evaluacion del comentario 12'),
+  (13,'Evaluacion del comentario 13'),
+  (14,'Evaluacion del comentario 14'),
+  (15,'Evaluacion del comentario 15'),
+  (16,'Evaluacion del comentario 16');
+GO
