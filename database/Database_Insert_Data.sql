@@ -183,15 +183,15 @@ GO
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
   VALUES (3, 3);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
-  VALUES (4, 7);
+  VALUES (4, 1);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
-  VALUES (5, 7);
+  VALUES (5, 2);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
-  VALUES (6, 4);
+  VALUES (6, 5);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
-  VALUES (7, 8);
+  VALUES (7, 9);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
-  VALUES (8, 4);
+  VALUES (8, 10);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
   VALUES (9, 8);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
@@ -216,8 +216,11 @@ GO
   VALUES (19, 10);
   INSERT INTO PlanesCursos (IdCurso, IdPlan)
   VALUES (20, 10);
+  INSERT INTO PlanesCursos (IdCurso, IdPlan) VALUES(1,1);
+  INSERT INTO PlanesCursos (IdCurso, IdPlan) VALUES(4,2);
+  INSERT INTO PlanesCursos (IdCurso, IdPlan) VALUES(5,5);
+  INSERT INTO PlanesCursos (IdCurso, IdPlan) VALUES(1,1);
 GO
-
 -- Agregar estudiantes
 INSERT INTO Estudiantes (Id, Carne, Contrasena, Nombre, Apellido1, Apellido2, IdPlan) 
 VALUES 
