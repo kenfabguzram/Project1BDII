@@ -298,7 +298,7 @@ def cassandra():
     session = cluster.connect()
 
     # Get Timestamp
-    timestamp = datetime.datetime.now(pytz.utc)
+    timestamp = datetime.now(pytz.utc)
 
     # Insert data
     query = 'INSERT INTO "tfex-cosmos-cassandra-keyspace".userlogs (user_id, logline, event_timestamp) VALUES (%s, %s, %s)'

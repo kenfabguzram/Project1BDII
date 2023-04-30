@@ -53,3 +53,32 @@ Asistentes_Profesores: Esta tabla relaciona a un profesor con su estudiante asis
 **Actividades_Estudiantes_Archivos**: Esta tabla relaciona una actividad con un estudiante y un archivo.
 
 **Archivos_Carreras**: Esta es una tabla que relaciona un archivo con la carrera a la cual pertenece. Esto para archivos como evaluaciones de cátedra.
+
+# Explicación Funcionamiento de Thunkable    
+
+**Ventana Principal**: Es la ventana principal, esta se ejecuta al iniciar la aplicación. En esta se encuentran tres botones los cuales al ser presionados nos permiten realizar acciones como lo son registrarse, iniciar sesión y navegar al files manager. 
+
+**Files Manager**: Esta ventana contiene la opción para poder seleccionar un archivo y subirlo.
+
+**Sign Up**: Esta ventana funciona para registrarse en caso de ser un nuevo usuario. Es muy sencillo simplemente se deben llenar los espacios de texto con la información que se le solicita y presionar el botón 'Sign Up', en caso de acceder a esta ventana y querer regresar a la anterior se presiona 'Go Back'.  
+
+**Login**: Esta ventana funciona para usuarios que ya han sido registrados, en esta podrán iniciar sesión para ingresar en la aplicación. Simplemente deben llenar los espacios de texto con la información que se les solicita y con la que ya se habían registrado previamente, seguidamente se presiona 'Login' para ingresar. En caso de haber utilizado datos erróneos se le avisara y se le pedirá que vuelva a intentarlo. En caso de querer regresar a la ventana anterior se presiona 'Go Back'.  
+
+**Error Login**: Esta ventana unicamente se hace visible si los datos que se introdujeron a la hora de hacer login son incorrectos. Esta ventana muestra que el correo electrónico utilizado o la contraseña son incorrectas y que debe volver a intentarlo. Para volver a intentarlo simplemente se debe presionar 'Go Back' y este lo regresara a la ventana para volver a iniciar sesión.  
+
+**Menu**: Esta sera la ventana que se abrirá a la hora de iniciar sesión, esta nos permite acceder al sistema de matricula y registrarse como un estudiante activo. Cualquiera sea la opción seleccionada una vez al ser presionada esta nos llevara a la ventana que cumpla con dicha solicitud. En caso de querer cerrar la sesión simplemente se debe presionar 'Log Out'.  
+
+**Matricula**: Esta ventana se abrirá a la hora de acceder a la matricula. Esta nos permite realizar 'Submit' para enviar los datos registrados o 'Go back' para salir de la matricula y regresar al menu.  
+
+**Active Student Sign Up**: En esta ventana tendremos la opción de poder registrarnos como un estudiante, simplemente debemos llenar la información con los datos que se nos pidan y quedaremos registrados. También podremos ver las carreras que se encuentran disponibles, se selecciona la que se desee y quedaremos registrados pata esa carrera. Haciendo 'Sign Up' quedaremos registrados, de lo contrario si se desea regresar simplemente se presiona 'Go Back'.  
+
+**Seleccionar Plan Estudio**: Esta ventana se abrirá después de acceder a alguna de las carreras disponibles, aca se mostrar los planes de estudio que tienen disponibles estas carreras. Se puede seleccionar el plan de estudio que se desee y queda registrado, o de lo contrario si se desea devolver a la ventana anterior simplemente se presiona 'Go Back'.  
+
+# Conclusiones
+- Desde el inicio del proyecto se pacto una reunion la cual nos permitió estructurar todo lo que se debía hacer y dividirnos las cargas de trabajo entre los miembros del grupo. Gracias a esto cada miembro del grupo pudo aportar su parte en el proyecto y enfocarse en su respectiva tarea, de igual manera hubo mucho compañerismo a la hora de trabajar y esto nos ayudo a mantenernos en comunicación y a ayudarse unos a otros en caso de errores.  
+
+- Una ventaja que tuvimos desde el principio fue enfocarnos en modelar un diagrama de bases de datos eficiente, gracias a que esto fue una de las prioridades, una vez terminado fue mucho mas sencillo continuar con el trabajo de la base de datos y todo el trabajo en esta se hizo de manera mas rápida al saber de que manera esta ya estaba modelada. Consideramos que el modelar de manera eficiente este diagrama ha sido uno de los pasos primordiales en el desarrollo.  
+
+- Trabajar con Cassandra como base de datos NoSql fue una experiencia bastante agradable. La manera que nos permite Azure de manipular esta base de datos es muy sencilla, ya que todo lo necesario para realizar la conexión a esta es otorgado por Azure, simplemente se debe remplazar la información con la que se nos brinda para que se haga la conexión. Una vez hecho ya se puede proceder a insertar datos en las tablas. Sin embargo, una de las dificultades que se presentaron fue el hecho de que CosmosDB necesitaba tener el ip de la persona que estaba manipulando la base, el problema esta en que una vez agregado el ip si se cambia la infraestructura el ip se volvía a borrar, lo que hacia tedioso el tener que estar agregando el ip una y otra vez. Esto podia ser arreglado al agregar un bloque de código a la infraestructura, sin embargo, este paso fue realizado tarde.
+
+- El haber utilizado Thunkable para el desarrollo de aplicaciones para dispositivos Movil fue una experiencia interesante, ya que nunca se había trabajado con una herramienta la cual su código viniera en formato de bloques. Consideramos que Thunkable es una herramienta interesante de aprender, sin embargo, mientras se indagaba por información nos hemos dado cuenta que muchas opciones solo están disponibles en la opción de pago, lo que lo hace en algunos casos bastante limitante para trabajar, ya que había que buscar otro tipo de solución que podia resultar en agregar mas bloques de código.  
