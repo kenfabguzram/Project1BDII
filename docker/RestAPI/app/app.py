@@ -40,30 +40,6 @@ if "APPINSIGHTS_KEY" in os.environ:
         sampler=ProbabilitySampler(rate=1.0),
     )
 
-
-
-def connect_to_cassandra():
-    # Create authentication info
-    # Use username and password provide by Azure Cosmos
-    ssl_context = SSLContext(PROTOCOL_TLS)
-    ssl_context.verify_mode = CERT_NONE
-    auth_provider = PlainTextAuthProvider(
-        username="tfex-cosmos-db-31154",
-        password="C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==",
-    )
-    # Create the connection with cassandra
-    cluster = Cluster(
-        ["tfex-cosmos-db-31154.cassandra.cosmos.azure.com"],
-        port=10350,
-        auth_provider=auth_provider,
-        ssl_context=ssl_context,
-    )
-    # Create the session
-    session = cluster.connect()
-
-    return session, cluster
-
-
 def connect_to_database():
     print(f"env: {os.environ['SQLAZURECONNSTR_WWIF']}")
     try:
@@ -309,7 +285,17 @@ def cassandra():
     # Get Data
     message = flask.request.get_json()
 
-    session, cluster = connect_to_cassandra()
+    # Create authentication info
+    # Use username and password provide by Azure Cosmos
+    ssl_context = SSLContext(PROTOCOL_TLS)
+    ssl_context.verify_mode = CERT_NONE
+    auth_provider = PlainTextAuthProvider(username='tfex-cosmos-db-31154', password='C2A2lQkldr8Rx6Uzw6p85GtL5tpBlBx79PB8KShzbQ0q1Zk8xTWzmLisViXYwFagSenr8PoPnEN4ACDbnKKI5g==')
+   
+    # Create the connection with cassandra
+    cluster = Cluster(['tfex-cosmos-db-31154.cassandra.cosmos.azure.com'], port = 10350, auth_provider=auth_provider,ssl_context=ssl_context)
+
+    # Create the session
+    session = cluster.connect()
 
     # Get Timestamp
     timestamp = datetime.datetime.now(pytz.utc)
@@ -325,4 +311,5 @@ def cassandra():
 
 
 if __name__ == "__main__":
+    app.debug = True
     app.run()
