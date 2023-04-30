@@ -1,3 +1,32 @@
+[//]: # (Portada)
+# Instituto Tecnológico de Costa Rica
+
+# Escuela de Computación
+
+# Bases de Datos II GR 1
+
+# Proyecto 1 Bases de Datos II
+
+# Estudiantes: 
+# Carlos Eduardo Leiva Medaglia / 2021032973
+# Kenneth Palacios Molina / 2020035407
+# Kendall Fabian Guzman Ramirez / 2019076561
+# Ivan Solis Avila / 2018209698
+# Jose Pablo Quesada / 2020211670
+
+# Profesor: 
+# Gerardo Nereo Campos Araya
+
+# I Semestre 2023
+[//]: # (Dejo esto para que el siguiente texto inicie en una nueva página)
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
 # Explicación de Diagrama de Base de Datos
 
 **Cursos**: Esta es la tabla con más conexiones porque, al igual que en una universidad, se centra en estos. Esta posee el nombre, cantidad de créditos, horas por semana, descripción y dos FK (Foreign Keys) que apuntan a las tablas Tipos y Escuelas. El resto de las conexiones se verán en las tablas que poseen las FK.
