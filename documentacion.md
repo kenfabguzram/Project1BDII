@@ -74,6 +74,19 @@ Asistentes_Profesores: Esta tabla relaciona a un profesor con su estudiante asis
 
 **Seleccionar Plan Estudio**: Esta ventana se abrirá después de acceder a alguna de las carreras disponibles, aca se mostrar los planes de estudio que tienen disponibles estas carreras. Se puede seleccionar el plan de estudio que se desee y queda registrado, o de lo contrario si se desea devolver a la ventana anterior simplemente se presiona 'Go Back'.  
 
+# Explicacion de NodeJS App 
+Para la app de node js decidimos usar el framework **VueJS** por su simplicidad para realizar el frontend. Ya que acá se muetran todos los documentos guardados para un usuario en la base de datos, se necesita un componente para representar el documento y otro para representar el arreglo de documentos. El primero es llamado **Item** y recibe los datos del titulo, data e isFile. El título es el nombre con el que se mostrará el archivo, data son otros datos relevantes sobre este como tamaño por ejemplo, por último isFile es un booleano que solamente se encarga de cambiar el ícono mostrado en caso de que se quiera mostrar una carpeta. Para los casos de uso actual no se debería cambiar el isFile pero se implementó por si fuese necesario a futuro. A su vez cada Item muestra unos botones para borrar o editar el item.
+Por otra parte existe el componente llamado **ItemList**. Como su nombre lo indica, este sirve para mostrar el listado de Items. Recibe un json con el formato:
+
+items : [
+    { title: 'Archivo 1', data: 'Datos del archivo 1', isFile: true },
+    { title: 'Archivo 2', data: 'Datos del archivo 2', isFile: true }
+],
+
+y crea un objeto item por cada objeto de esta lista, de tal manera que si acá se traen los datos de los objetos de un usuario se pueden mostrar con mucha facilidad. Finalmente hay un área extra con un botón para agregar un nuevo archivo, que lo agregaría a la base de datos y a al itemList.
+Por otra parte, cabe recalcar que por la manera en la que trabaja VueJS la funcionalidad, la estructura y el estilo se encuentran en un solo archivo, por lo cual es sencillo de modularizar las partes.
+
+
 # Conclusiones
 - Desde el inicio del proyecto se pacto una reunion la cual nos permitió estructurar todo lo que se debía hacer y dividirnos las cargas de trabajo entre los miembros del grupo. Gracias a esto cada miembro del grupo pudo aportar su parte en el proyecto y enfocarse en su respectiva tarea, de igual manera hubo mucho compañerismo a la hora de trabajar y esto nos ayudo a mantenernos en comunicación y a ayudarse unos a otros en caso de errores.  
 
