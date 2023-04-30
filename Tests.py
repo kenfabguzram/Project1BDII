@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import patch, Mock
 import requests
-from app import app
+import app
+import os
 
 class TestAPI(unittest.TestCase):
 

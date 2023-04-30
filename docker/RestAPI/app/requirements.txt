@@ -12,5 +12,3 @@ python-dotenv
 tenacity
 pytz
 datetime
-unittest
-requests
