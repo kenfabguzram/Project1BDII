@@ -11,9 +11,9 @@ from ssl import PROTOCOL_TLS, SSLContext, CERT_NONE
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 from werkzeug.utils import secure_filename
-import datetime
+from datetime import datetime
 import werkzeug.utils
-
+import time
 import pytz
 
 app = flask.Flask(__name__)
@@ -39,6 +39,7 @@ if "APPINSIGHTS_KEY" in os.environ:
         ),
         sampler=ProbabilitySampler(rate=1.0),
     )
+
 
 
 def connect_to_cassandra():
@@ -129,21 +130,17 @@ def exec_query(query: str):
 
 @app.route("/estudiante/matricula/cursos", methods=["GET"])
 def get_student_enrollment_courses():
-    json_input = flask.request.get_json()
-    student_id = json_input["Id"]
+    student_id=flask.request.args.get("Id")
     query_str = generate_sp_exec_str("SpCursosEstudiante", {"IdEstudiante": student_id})
     return exec_query_get(query_str)
 
-
 @app.route("/planes", methods=["GET"])
 def get_plans():
-    json_input = flask.request.get_json()
-    career_id = json_input["Id"]
+    career_id=flask.request.args.get("Id")
     query_str = generate_sp_exec_str(
         "SpObtenerPlanesDeEstudio", {"IdCarrera": career_id}
     )
     return exec_query_get(query_str)
-
 
 @app.route("/carreras", methods=["GET"])
 def get_careers():
@@ -242,7 +239,7 @@ def post_file():
     file = flask.request.files["file"]
     if file.filename == "":
         return "<p>Upload No name!</p>"
-    filename = secure_filename(file.filename)
+    filename = secure_filename(str(datetime.now())+file.filename)
     blob_client = blob_service_client.get_blob_client(
         container="documents", blob=filename
     )
@@ -258,6 +255,54 @@ def visualize_files():
         print(blob.name)
     # wip
 
+@app.route("/files", methods=["GET"])
+def get_files():
+    try:
+        container_client = blob_service_client.get_container_client("documents")
+        blob_list = container_client.list_blobs()
+        files = [{'id': blob.name, 'name': blob.name} for blob in blob_list]
+        return jsonify(files), 200
+    except Exception as e:
+        print(str(e))
+        return jsonify({'error': 'Unable to retrieve files.'}), 500
+
+@app.route("/files", methods=["DELETE"])
+def delete_file():
+    try:
+        file_name=flask.request.args.get("name")
+        # Obtener una referencia al contenedor
+        container_client = blob_service_client.get_container_client(container="documents", blob=file_name)
+        
+        # Verificar si el archivo existe en el contenedor
+        blob_client = container_client.get_blob_client(file_name)
+        if not blob_client.exists():
+            return jsonify({"error": "El archivo no existe."}), 404
+
+        # Borrar el archivo del contenedor
+        blob_client.delete_blob()
+        return jsonify({"message": f"El archivo {file_name} se ha borrado exitosamente."}), 200
+
+    except Exception as e:
+        print(str(e))
+        return jsonify({"error": "No se pudo borrar el archivo."}), 500
+    
+
+@app.route('/files/download', methods=['GET'])
+def download_file():
+    try:
+        file_name=flask.request.args.get("name")
+        # Obtener una referencia al contenedor
+        container_client = blob_service_client.get_container_client(container="documents", blob=file_name)
+        blob_client = container_client.get_blob_client()
+        data = blob_client.download_blob().readall()
+        headers = {
+            'Content-Disposition': 'attachment; filename=' + file_name
+        }
+        return data, 200, headers
+    except Exception as e:
+        print(str(e))
+        return jsonify({'error': 'Unable to download file.'}), 500
+    
 
 @app.route("/Cassandra", methods=["POST"])
 def cassandra():
