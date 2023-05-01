@@ -163,7 +163,7 @@ def enroll_student():
     json_input = flask.request.get_json()
     student_id = json_input["StudentId"]
     group_id = json_input["GroupId"]
-    dict_query = {"IdEstudiante": student_id, "IdGrupo": int(group_id)}
+    dict_query = {"IdEstudiante": student_id, "IdGrupo": group_id}
     query_str = generate_sp_exec_str("SpMatricularEstudiante", dict_query)
     return exec_query(query_str)
 

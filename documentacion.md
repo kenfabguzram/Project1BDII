@@ -1,32 +1,3 @@
-[//]: # (Portada)
-# Instituto Tecnológico de Costa Rica
-
-# Escuela de Computación
-
-# Bases de Datos II GR 1
-
-# Proyecto 1 Bases de Datos II
-
-# Estudiantes: 
-# Carlos Eduardo Leiva Medaglia / 2021032973
-# Kenneth Palacios Molina / 2020035407
-# Kendall Fabian Guzman Ramirez / 2019076561
-# Ivan Solis Avila / 2018209698
-# Jose Pablo Quesada / 2020211670
-
-# Profesor: 
-# Gerardo Nereo Campos Araya
-
-# I Semestre 2023
-[//]: # (Dejo esto para que el siguiente texto inicie en una nueva página)
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
 # Explicación de Diagrama de Base de Datos
 
 **Cursos**: Esta es la tabla con más conexiones porque, al igual que en una universidad, se centra en estos. Esta posee el nombre, cantidad de créditos, horas por semana, descripción y dos FK (Foreign Keys) que apuntan a las tablas Tipos y Escuelas. El resto de las conexiones se verán en las tablas que poseen las FK.
@@ -85,44 +56,26 @@ Asistentes_Profesores: Esta tabla relaciona a un profesor con su estudiante asis
 
 # Explicación Funcionamiento de Thunkable    
 
-**Ventana Principal**: Es la ventana principal, esta se ejecuta al iniciar la aplicación. En esta se encuentran tres botones los cuales al ser presionados nos permiten realizar acciones como lo son registrarse, iniciar sesión y navegar al files manager.  
-
-![Thunkable](https://imgur.com/X01yWAu.png)  
+**Ventana Principal**: Es la ventana principal, esta se ejecuta al iniciar la aplicación. En esta se encuentran tres botones los cuales al ser presionados nos permiten realizar acciones como lo son registrarse, iniciar sesión y navegar al files manager. 
 
 **Files Manager**: Esta ventana contiene la opción para poder seleccionar un archivo y subirlo.
 
-![Thunkable](https://imgur.com/VOIMJbV.png)  
-
 **Sign Up**: Esta ventana funciona para registrarse en caso de ser un nuevo usuario. Es muy sencillo simplemente se deben llenar los espacios de texto con la información que se le solicita y presionar el botón 'Sign Up', en caso de acceder a esta ventana y querer regresar a la anterior se presiona 'Go Back'.  
-
-![Thunkable](https://imgur.com/ey6cmsM.png)  
 
 **Login**: Esta ventana funciona para usuarios que ya han sido registrados, en esta podrán iniciar sesión para ingresar en la aplicación. Simplemente deben llenar los espacios de texto con la información que se les solicita y con la que ya se habían registrado previamente, seguidamente se presiona 'Login' para ingresar. En caso de haber utilizado datos erróneos se le avisara y se le pedirá que vuelva a intentarlo. En caso de querer regresar a la ventana anterior se presiona 'Go Back'.  
 
-![Thunkable](https://imgur.com/StfRNNY.png)  
-
 **Error Login**: Esta ventana unicamente se hace visible si los datos que se introdujeron a la hora de hacer login son incorrectos. Esta ventana muestra que el correo electrónico utilizado o la contraseña son incorrectas y que debe volver a intentarlo. Para volver a intentarlo simplemente se debe presionar 'Go Back' y este lo regresara a la ventana para volver a iniciar sesión.  
-
-![Thunkable](https://imgur.com/Q3C72NX.png)  
 
 **Menu**: Esta sera la ventana que se abrirá a la hora de iniciar sesión, esta nos permite acceder al sistema de matricula y registrarse como un estudiante activo. Cualquiera sea la opción seleccionada una vez al ser presionada esta nos llevara a la ventana que cumpla con dicha solicitud. En caso de querer cerrar la sesión simplemente se debe presionar 'Log Out'.  
 
-![Thunkable](https://imgur.com/n86KsbQ.png)  
-
 **Matricula**: Esta ventana se abrirá a la hora de acceder a la matricula. Esta nos permite realizar 'Submit' para enviar los datos registrados o 'Go back' para salir de la matricula y regresar al menu.  
-
-![Thunkable](https://imgur.com/mTgIZ2E.png)  
 
 **Active Student Sign Up**: En esta ventana tendremos la opción de poder registrarnos como un estudiante, simplemente debemos llenar la información con los datos que se nos pidan y quedaremos registrados. También podremos ver las carreras que se encuentran disponibles, se selecciona la que se desee y quedaremos registrados pata esa carrera. Haciendo 'Sign Up' quedaremos registrados, de lo contrario si se desea regresar simplemente se presiona 'Go Back'.  
 
-![Thunkable](https://imgur.com/lWJ3Bki.png)  
-
 **Seleccionar Plan Estudio**: Esta ventana se abrirá después de acceder a alguna de las carreras disponibles, aca se mostrar los planes de estudio que tienen disponibles estas carreras. Se puede seleccionar el plan de estudio que se desee y queda registrado, o de lo contrario si se desea devolver a la ventana anterior simplemente se presiona 'Go Back'.  
 
-![Thunkable](https://imgur.com/3CY8lJZ.png)  
-
 # Explicacion de NodeJS App 
-Para la app de node js decidimos usar el framework **VueJS** por su simplicidad para realizar el frontend. Ya que acá se muestran todos los documentos guardados para un usuario en la base de datos, se necesita un componente para representar el documento y otro para representar el arreglo de documentos. El primero es llamado **Item** y recibe los datos del titulo, data e isFile. El título es el nombre con el que se mostrará el archivo, data son otros datos relevantes sobre este como tamaño por ejemplo, por último isFile es un booleano que solamente se encarga de cambiar el ícono mostrado en caso de que se quiera mostrar una carpeta. Para los casos de uso actual no se debería cambiar el isFile pero se implementó por si fuese necesario a futuro. A su vez cada Item muestra unos botones para borrar o editar el item.
+Para la app de node js decidimos usar el framework **VueJS** por su simplicidad para realizar el frontend. Ya que acá se muetran todos los documentos guardados para un usuario en la base de datos, se necesita un componente para representar el documento y otro para representar el arreglo de documentos. El primero es llamado **Item** y recibe los datos del titulo, data e isFile. El título es el nombre con el que se mostrará el archivo, data son otros datos relevantes sobre este como tamaño por ejemplo, por último isFile es un booleano que solamente se encarga de cambiar el ícono mostrado en caso de que se quiera mostrar una carpeta. Para los casos de uso actual no se debería cambiar el isFile pero se implementó por si fuese necesario a futuro. A su vez cada Item muestra unos botones para borrar o editar el item.
 Por otra parte existe el componente llamado **ItemList**. Como su nombre lo indica, este sirve para mostrar el listado de Items. Recibe un json con el formato:
 
 items : [
@@ -139,12 +92,6 @@ Por otra parte, cabe recalcar que por la manera en la que trabaja VueJS la funci
 
 - Una ventaja que tuvimos desde el principio fue enfocarnos en modelar un diagrama de bases de datos eficiente, gracias a que esto fue una de las prioridades, una vez terminado fue mucho mas sencillo continuar con el trabajo de la base de datos y todo el trabajo en esta se hizo de manera mas rápida al saber de que manera esta ya estaba modelada. Consideramos que el modelar de manera eficiente este diagrama ha sido uno de los pasos primordiales en el desarrollo.  
 
-- Docker fue una de las herramientas mas útiles utilizadas en este proyecto, ya que esta nos permitía tener nuestro código en una imagen la que posteriormente podia ser configurada en Azure para que corriera desde ahi. Consideramos que Docker es una herramienta bastante importante en el desarrollo de este tipo de aplicaciones y el hecho de llevarla de la mano con un servicio en la nube como lo es Azure nos brinda mayor eficiencia al desarrollo de esta.
-
 - Trabajar con Cassandra como base de datos NoSql fue una experiencia bastante agradable. La manera que nos permite Azure de manipular esta base de datos es muy sencilla, ya que todo lo necesario para realizar la conexión a esta es otorgado por Azure, simplemente se debe remplazar la información con la que se nos brinda para que se haga la conexión. Una vez hecho ya se puede proceder a insertar datos en las tablas. Sin embargo, una de las dificultades que se presentaron fue el hecho de que CosmosDB necesitaba tener el ip de la persona que estaba manipulando la base, el problema esta en que una vez agregado el ip si se cambia la infraestructura el ip se volvía a borrar, lo que hacia tedioso el tener que estar agregando el ip una y otra vez. Esto podia ser arreglado al agregar un bloque de código a la infraestructura, sin embargo, este paso fue realizado tarde.
 
-- El haber utilizado Thunkable para el desarrollo de aplicaciones para dispositivos Movil fue una experiencia interesante, ya que nunca se había trabajado con una herramienta la cual su código viniera en formato de bloques. Consideramos que Thunkable es una herramienta interesante de aprender, sin embargo, mientras se indagaba por información nos hemos dado cuenta que muchas opciones solo están disponibles en la opción de pago, lo que lo hace en algunos casos bastante limitante para trabajar, ya que había que buscar otro tipo de solución que podia resultar en agregar mas bloques de código.
-
-- El utilizamiento de VueJS como framework para la creación de componentes reutilizables en el frontend fue un gran acierto debido a que de esta manera se pueden mostrar los datos de manera simple. El hecho de que vue sea un framework minimalista y con pocas restricciones facilitó mucho su uso, a diferencia de si se hubiera elegido un framework como Angular ya que este es mucho más estructurado y complejo. Aún así la curva de aprendizaje no fue sencilla ya que posee una sintaxis un poco compleja, además que se complicó el hecho de mover información entre componentes ya que no lo encontramos muy intuitiva. Desgraciadamente no se logró conectar esta parte del proyecto con la autenticación en Firebase, por lo cual no fue posible obtener el userId para mostrar solamente los archivos de un usuario. La idea original era enviar al ItemList un JSON con los datos de todos los archivos provenientes de la BD, sin embargo al no tener userId no podemos llamar al procedimiento correspondiente. 
-
-- Es importante mencionar que la utilización de GitHub nos permitió facilitar mucho mas el trabajo en equipo, si había un cambio en la infraestructura o en el código de la api, era importante que todos pudiéramos ver estos cambios, por lo que gracias GitHub podíamos estar en constante actualización de la aplicación sin tener problemas de que tuviéramos códigos diferentes. Sin embargo, no se puede decir lo mismo de Thunkable, al trabajar con la version gratuita de este, este traía problemas a la hora de querer trabajar de manera colaborativa, ya que no lo permitía, lo que si era posible, era generar una copia del proyecto y compartirla entre todos, y de esta manera revisar que se había agregado y que no, y asi estarlo actualizando, lo que si puede considerarse algo tedioso.
+- El haber utilizado Thunkable para el desarrollo de aplicaciones para dispositivos Movil fue una experiencia interesante, ya que nunca se había trabajado con una herramienta la cual su código viniera en formato de bloques. Consideramos que Thunkable es una herramienta interesante de aprender, sin embargo, mientras se indagaba por información nos hemos dado cuenta que muchas opciones solo están disponibles en la opción de pago, lo que lo hace en algunos casos bastante limitante para trabajar, ya que había que buscar otro tipo de solución que podia resultar en agregar mas bloques de código.  
